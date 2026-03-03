@@ -34,3 +34,4 @@ weights/
 .vscode/
 .idea/
 .DS_Store
+third_party/HAWP/hawp.zip
