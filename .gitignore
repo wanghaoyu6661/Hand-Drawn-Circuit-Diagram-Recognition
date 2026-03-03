@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+build/
+dist/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Env
+.venv/
+venv/
+.env
+
+# Local machine paths
+configs/paths.local.yaml
+
+# Runtime outputs
+outputs/
+logs/
+
+# Weights / checkpoints
+weights/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# OS / editors
+.vscode/
+.idea/
+.DS_Store
