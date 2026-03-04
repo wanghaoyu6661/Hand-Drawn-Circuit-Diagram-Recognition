@@ -16,3 +16,11 @@ The main pipeline is executed by:
 
 ```bash
 bash scripts/run_all.sh
+Quick Start
+Clone the repository:
+git clone git@github.com:wanghaoyu6661/Hand-Drawn-Circuit-Diagram-Recognition.git
+cd Hand-Drawn-Circuit-Diagram-Recognition
+Initialize the mmpose submodule (recommended shallow clone):
+git submodule update --init --depth 1
+If you prefer full recursive clone:
+git submodule update --init --recursive
