@@ -1,0 +1,1050 @@
+{
+  "image": "cir1",
+  "width": 1198,
+  "height": 683,
+  "components": [
+    {
+      "id": 0,
+      "cls_id": 6,
+      "cls_name": "voltage.dc",
+      "bbox": [
+        655.775017,
+        264.4033015,
+        878.6569270000001,
+        399.56012250000003
+      ],
+      "cls_name_refined": "current.dc",
+      "subtype": "idc",
+      "subtype_conf": 0.999982476234436,
+      "variant": "two_port",
+      "method": "dinov2_dcsrc",
+      "matched_terminal_count": 2
+    },
+    {
+      "id": 1,
+      "cls_id": 15,
+      "cls_name": "inductor",
+      "bbox": [
+        392.591788,
+        475.053137,
+        644.303568,
+        581.326571
+      ]
+    },
+    {
+      "id": 2,
+      "cls_id": 15,
+      "cls_name": "inductor",
+      "bbox": [
+        336.83207600000003,
+        82.31072049999997,
+        541.62778,
+        190.8961095
+      ]
+    },
+    {
+      "id": 3,
+      "cls_id": 9,
+      "cls_name": "resistor",
+      "bbox": [
+        795.7720989999999,
+        87.94888549999999,
+        1011.650501,
+        197.2869405
+      ]
+    },
+    {
+      "id": 4,
+      "cls_id": 4,
+      "cls_name": "gnd",
+      "bbox": [
+        25.609406399999997,
+        375.2787895,
+        199.95794039999998,
+        492.2801045
+      ]
+    },
+    {
+      "id": 5,
+      "cls_id": 9,
+      "cls_name": "resistor",
+      "bbox": [
+        762.202342,
+        466.92646149999996,
+        977.123542,
+        573.9628064999999
+      ]
+    },
+    {
+      "id": 6,
+      "cls_id": 9,
+      "cls_name": "resistor",
+      "bbox": [
+        355.103373,
+        283.372602,
+        575.754607,
+        390.760692
+      ]
+    },
+    {
+      "id": 7,
+      "cls_id": 12,
+      "cls_name": "capacitor.unpolarized",
+      "bbox": [
+        600.0542399999999,
+        69.678977,
+        734.6135999999999,
+        212.182829
+      ]
+    }
+  ],
+  "points": [
+    {
+      "id": 0,
+      "x": 600.8722534179688,
+      "y": 148.33950805664062,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 7,
+          "cls_id": 12,
+          "cls_name": "capacitor.unpolarized",
+          "side": "left",
+          "edge_dist": 0.8180134179688139
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "x": 795.5467529296875,
+      "y": 146.20477294921875,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 3,
+          "cls_id": 9,
+          "cls_name": "resistor",
+          "side": "left",
+          "edge_dist": 0.22534607031241194
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "x": 645.7979736328125,
+      "y": 532.526123046875,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 1,
+          "cls_id": 15,
+          "cls_name": "inductor",
+          "side": "right",
+          "edge_dist": 1.4944056328124589
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "x": 735.6466064453125,
+      "y": 148.33871459960938,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 7,
+          "cls_id": 12,
+          "cls_name": "capacitor.unpolarized",
+          "side": "right",
+          "edge_dist": 1.0330064453125942
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "x": 761.853515625,
+      "y": 528.255859375,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 5,
+          "cls_id": 9,
+          "cls_name": "resistor",
+          "side": "left",
+          "edge_dist": 0.3488263750000442
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "x": 1012.6840209960938,
+      "y": 144.06985473632812,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 3,
+          "cls_id": 9,
+          "cls_name": "resistor",
+          "side": "right",
+          "edge_dist": 1.033519996093787
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "x": 336.93719482421875,
+      "y": 151.54046630859375,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 2,
+          "cls_id": 15,
+          "cls_name": "inductor",
+          "side": "left",
+          "edge_dist": 0.10511882421872087
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "x": 653.2852783203125,
+      "y": 338.2983093261719,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 0,
+          "cls_id": 6,
+          "cls_name": "voltage.dc",
+          "side": "left",
+          "edge_dist": 2.489738679687548
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "x": 355.6548767089844,
+      "y": 340.4315490722656,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 6,
+          "cls_id": 9,
+          "cls_name": "resistor",
+          "side": "left",
+          "edge_dist": 0.5515037089843986
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "x": 540.9705200195312,
+      "y": 150.47303771972656,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 2,
+          "cls_id": 15,
+          "cls_name": "inductor",
+          "side": "right",
+          "edge_dist": 0.6572599804687798
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "x": 393.0949401855469,
+      "y": 542.13134765625,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 1,
+          "cls_id": 15,
+          "cls_name": "inductor",
+          "side": "left",
+          "edge_dist": 0.5031521855468668
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "x": 1106.2777099609375,
+      "y": 329.761474609375,
+      "type": "node",
+      "matches": []
+    },
+    {
+      "id": 12,
+      "x": 879.7802734375,
+      "y": 337.2312927246094,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 0,
+          "cls_id": 6,
+          "cls_name": "voltage.dc",
+          "side": "right",
+          "edge_dist": 1.1233464374998903
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "x": 125.41419982910156,
+      "y": 374.5828857421875,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 4,
+          "cls_id": 4,
+          "cls_name": "gnd",
+          "side": "top",
+          "edge_dist": 0.6959037578125162
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "x": 977.1181640625,
+      "y": 522.9215087890625,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 5,
+          "cls_id": 9,
+          "cls_name": "resistor",
+          "side": "right",
+          "edge_dist": 0.005377937500043117
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "x": 230.23867797851562,
+      "y": 549.601318359375,
+      "type": "node",
+      "matches": []
+    },
+    {
+      "id": 16,
+      "x": 125.41545867919922,
+      "y": 344.7000732421875,
+      "type": "node",
+      "matches": []
+    },
+    {
+      "id": 17,
+      "x": 1102.5325927734375,
+      "y": 139.8006134033203,
+      "type": "node",
+      "matches": []
+    },
+    {
+      "id": 18,
+      "x": 574.6632080078125,
+      "y": 342.56671142578125,
+      "type": "component_terminal",
+      "matches": [
+        {
+          "comp_id": 6,
+          "cls_id": 9,
+          "cls_name": "resistor",
+          "side": "right",
+          "edge_dist": 1.0913989921874645
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "x": 233.98355102539062,
+      "y": 159.01077270507812,
+      "type": "node",
+      "matches": []
+    },
+    {
+      "id": 20,
+      "x": 1115.63330078125,
+      "y": 516.5177001953125,
+      "type": "node",
+      "matches": []
+    },
+    {
+      "id": 21,
+      "x": 233.9822235107422,
+      "y": 346.8356628417969,
+      "type": "node",
+      "matches": []
+    }
+  ],
+  "endpoints": [
+    {
+      "eid": 0,
+      "kind": "node",
+      "point_id": 11,
+      "x": 1106.0,
+      "y": 330.0,
+      "x_raw": 1106.2777099609375,
+      "y_raw": 329.761474609375,
+      "cc_label": 1,
+      "snap_dist": 0.0
+    },
+    {
+      "eid": 1,
+      "kind": "node",
+      "point_id": 15,
+      "x": 230.0,
+      "y": 550.0,
+      "x_raw": 230.23867797851562,
+      "y_raw": 549.601318359375,
+      "cc_label": 4,
+      "snap_dist": 0.0
+    },
+    {
+      "eid": 2,
+      "kind": "node",
+      "point_id": 16,
+      "x": 125.0,
+      "y": 345.0,
+      "x_raw": 125.41545867919922,
+      "y_raw": 344.7000732421875,
+      "cc_label": 4,
+      "snap_dist": 0.0
+    },
+    {
+      "eid": 3,
+      "kind": "node",
+      "point_id": 17,
+      "x": 1103.0,
+      "y": 140.0,
+      "x_raw": 1102.5325927734375,
+      "y_raw": 139.8006134033203,
+      "cc_label": 1,
+      "snap_dist": 0.0
+    },
+    {
+      "eid": 4,
+      "kind": "node",
+      "point_id": 19,
+      "x": 234.0,
+      "y": 159.0,
+      "x_raw": 233.98355102539062,
+      "y_raw": 159.01077270507812,
+      "cc_label": 4,
+      "snap_dist": 0.0
+    },
+    {
+      "eid": 5,
+      "kind": "node",
+      "point_id": 20,
+      "x": 1116.0,
+      "y": 517.0,
+      "x_raw": 1115.63330078125,
+      "y_raw": 516.5177001953125,
+      "cc_label": 1,
+      "snap_dist": 0.0
+    },
+    {
+      "eid": 6,
+      "kind": "node",
+      "point_id": 21,
+      "x": 234.0,
+      "y": 347.0,
+      "x_raw": 233.9822235107422,
+      "y_raw": 346.8356628417969,
+      "cc_label": 4,
+      "snap_dist": 0.0
+    },
+    {
+      "eid": 7,
+      "kind": "terminal",
+      "point_id": 0,
+      "x": 599.0,
+      "y": 148.0,
+      "comp_id": 7,
+      "cls_id": 12,
+      "cls_name": "capacitor.unpolarized",
+      "side": "left",
+      "edge_dist": 0.8180134179688139,
+      "x_raw": 600.8722534179688,
+      "y_raw": 148.33950805664062,
+      "cc_label": 3,
+      "snap_dist": 2.0
+    },
+    {
+      "eid": 8,
+      "kind": "terminal",
+      "point_id": 1,
+      "x": 794.0,
+      "y": 146.0,
+      "comp_id": 3,
+      "cls_id": 9,
+      "cls_name": "resistor",
+      "side": "left",
+      "edge_dist": 0.22534607031241194,
+      "x_raw": 795.5467529296875,
+      "y_raw": 146.20477294921875,
+      "cc_label": 2,
+      "snap_dist": 2.0
+    },
+    {
+      "eid": 9,
+      "kind": "terminal",
+      "point_id": 2,
+      "x": 646.0,
+      "y": 533.0,
+      "comp_id": 1,
+      "cls_id": 15,
+      "cls_name": "inductor",
+      "side": "right",
+      "edge_dist": 1.4944056328124589,
+      "x_raw": 645.7979736328125,
+      "y_raw": 532.526123046875,
+      "cc_label": 6,
+      "snap_dist": 0.0
+    },
+    {
+      "eid": 10,
+      "kind": "terminal",
+      "point_id": 3,
+      "x": 736.0,
+      "y": 148.0,
+      "comp_id": 7,
+      "cls_id": 12,
+      "cls_name": "capacitor.unpolarized",
+      "side": "right",
+      "edge_dist": 1.0330064453125942,
+      "x_raw": 735.6466064453125,
+      "y_raw": 148.33871459960938,
+      "cc_label": 2,
+      "snap_dist": 0.0
+    },
+    {
+      "eid": 11,
+      "kind": "terminal",
+      "point_id": 4,
+      "x": 761.0,
+      "y": 528.0,
+      "comp_id": 5,
+      "cls_id": 9,
+      "cls_name": "resistor",
+      "side": "left",
+      "edge_dist": 0.3488263750000442,
+      "x_raw": 761.853515625,
+      "y_raw": 528.255859375,
+      "cc_label": 6,
+      "snap_dist": 1.0
+    },
+    {
+      "eid": 12,
+      "kind": "terminal",
+      "point_id": 5,
+      "x": 1013.0,
+      "y": 144.0,
+      "comp_id": 3,
+      "cls_id": 9,
+      "cls_name": "resistor",
+      "side": "right",
+      "edge_dist": 1.033519996093787,
+      "x_raw": 1012.6840209960938,
+      "y_raw": 144.06985473632812,
+      "cc_label": 1,
+      "snap_dist": 0.0
+    },
+    {
+      "eid": 13,
+      "kind": "terminal",
+      "point_id": 6,
+      "x": 335.0,
+      "y": 152.0,
+      "comp_id": 2,
+      "cls_id": 15,
+      "cls_name": "inductor",
+      "side": "left",
+      "edge_dist": 0.10511882421872087,
+      "x_raw": 336.93719482421875,
+      "y_raw": 151.54046630859375,
+      "cc_label": 4,
+      "snap_dist": 2.0
+    },
+    {
+      "eid": 14,
+      "kind": "terminal",
+      "point_id": 7,
+      "x": 653.0,
+      "y": 338.0,
+      "comp_id": 0,
+      "cls_id": 6,
+      "cls_name": "voltage.dc",
+      "side": "left",
+      "edge_dist": 2.489738679687548,
+      "x_raw": 653.2852783203125,
+      "y_raw": 338.2983093261719,
+      "cc_label": 5,
+      "snap_dist": 0.0,
+      "port_role": "Flowing From",
+      "port_conf": 0.968423068523407,
+      "port_from": "vitpose_bestconf_infer"
+    },
+    {
+      "eid": 15,
+      "kind": "terminal",
+      "point_id": 8,
+      "x": 354.0,
+      "y": 340.0,
+      "comp_id": 6,
+      "cls_id": 9,
+      "cls_name": "resistor",
+      "side": "left",
+      "edge_dist": 0.5515037089843986,
+      "x_raw": 355.6548767089844,
+      "y_raw": 340.4315490722656,
+      "cc_label": 4,
+      "snap_dist": 2.0
+    },
+    {
+      "eid": 16,
+      "kind": "terminal",
+      "point_id": 9,
+      "x": 542.0,
+      "y": 150.0,
+      "comp_id": 2,
+      "cls_id": 15,
+      "cls_name": "inductor",
+      "side": "right",
+      "edge_dist": 0.6572599804687798,
+      "x_raw": 540.9705200195312,
+      "y_raw": 150.47303771972656,
+      "cc_label": 3,
+      "snap_dist": 1.0
+    },
+    {
+      "eid": 17,
+      "kind": "terminal",
+      "point_id": 10,
+      "x": 391.0,
+      "y": 542.0,
+      "comp_id": 1,
+      "cls_id": 15,
+      "cls_name": "inductor",
+      "side": "left",
+      "edge_dist": 0.5031521855468668,
+      "x_raw": 393.0949401855469,
+      "y_raw": 542.13134765625,
+      "cc_label": 4,
+      "snap_dist": 2.0
+    },
+    {
+      "eid": 18,
+      "kind": "terminal",
+      "point_id": 12,
+      "x": 880.0,
+      "y": 337.0,
+      "comp_id": 0,
+      "cls_id": 6,
+      "cls_name": "voltage.dc",
+      "side": "right",
+      "edge_dist": 1.1233464374998903,
+      "x_raw": 879.7802734375,
+      "y_raw": 337.2312927246094,
+      "cc_label": 1,
+      "snap_dist": 0.0,
+      "port_role": "Flowing To",
+      "port_conf": 0.968423068523407,
+      "port_from": "vitpose_bestconf"
+    },
+    {
+      "eid": 19,
+      "kind": "terminal",
+      "point_id": 13,
+      "x": 125.0,
+      "y": 374.0,
+      "comp_id": 4,
+      "cls_id": 4,
+      "cls_name": "gnd",
+      "side": "top",
+      "edge_dist": 0.6959037578125162,
+      "x_raw": 125.41419982910156,
+      "y_raw": 374.5828857421875,
+      "cc_label": 4,
+      "snap_dist": 1.0
+    },
+    {
+      "eid": 20,
+      "kind": "terminal",
+      "point_id": 14,
+      "x": 978.0,
+      "y": 523.0,
+      "comp_id": 5,
+      "cls_id": 9,
+      "cls_name": "resistor",
+      "side": "right",
+      "edge_dist": 0.005377937500043117,
+      "x_raw": 977.1181640625,
+      "y_raw": 522.9215087890625,
+      "cc_label": 1,
+      "snap_dist": 1.0
+    },
+    {
+      "eid": 21,
+      "kind": "terminal",
+      "point_id": 18,
+      "x": 576.0,
+      "y": 343.0,
+      "comp_id": 6,
+      "cls_id": 9,
+      "cls_name": "resistor",
+      "side": "right",
+      "edge_dist": 1.0913989921874645,
+      "x_raw": 574.6632080078125,
+      "y_raw": 342.56671142578125,
+      "cc_label": 5,
+      "snap_dist": 1.0
+    }
+  ],
+  "edges": [
+    {
+      "eid1": 3,
+      "eid2": 12,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 90.08884503644165,
+      "ratio": 1.0,
+      "cc_label": 1
+    },
+    {
+      "eid1": 5,
+      "eid2": 20,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 138.13037319865606,
+      "ratio": 1.0,
+      "cc_label": 1
+    },
+    {
+      "eid1": 0,
+      "eid2": 5,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 187.26718879718356,
+      "ratio": 1.0,
+      "cc_label": 1
+    },
+    {
+      "eid1": 0,
+      "eid2": 3,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 190.0236827345476,
+      "ratio": 1.0,
+      "cc_label": 1
+    },
+    {
+      "eid1": 0,
+      "eid2": 18,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 226.10838109190027,
+      "ratio": 1.0,
+      "cc_label": 1
+    },
+    {
+      "eid1": 2,
+      "eid2": 19,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 29.0,
+      "ratio": 1.0,
+      "cc_label": 4
+    },
+    {
+      "eid1": 4,
+      "eid2": 13,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 101.24228365658293,
+      "ratio": 1.0,
+      "cc_label": 4
+    },
+    {
+      "eid1": 2,
+      "eid2": 6,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 109.01834707974618,
+      "ratio": 1.0,
+      "cc_label": 4
+    },
+    {
+      "eid1": 6,
+      "eid2": 15,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 120.20399327809372,
+      "ratio": 1.0,
+      "cc_label": 4
+    },
+    {
+      "eid1": 1,
+      "eid2": 17,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 161.1986352299547,
+      "ratio": 1.0,
+      "cc_label": 4
+    },
+    {
+      "eid1": 4,
+      "eid2": 6,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 188.0,
+      "ratio": 1.0,
+      "cc_label": 4
+    },
+    {
+      "eid1": 1,
+      "eid2": 6,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 203.03940504246953,
+      "ratio": 1.0,
+      "cc_label": 4
+    },
+    {
+      "eid1": 7,
+      "eid2": 16,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 57.03507692639679,
+      "ratio": 1.0,
+      "cc_label": 3
+    },
+    {
+      "eid1": 8,
+      "eid2": 10,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 58.034472514187634,
+      "ratio": 1.0,
+      "cc_label": 2
+    },
+    {
+      "eid1": 9,
+      "eid2": 11,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 115.10864433221337,
+      "ratio": 1.0,
+      "cc_label": 6
+    },
+    {
+      "eid1": 14,
+      "eid2": 21,
+      "phase": 0,
+      "dir": "cc_tree",
+      "dist": 77.1621668954417,
+      "ratio": 1.0,
+      "cc_label": 5
+    }
+  ],
+  "texts": [
+    {
+      "image": "cir1",
+      "text": "10kΩ",
+      "text_box": [
+        0.793653,
+        0.0826511,
+        0.18,
+        0.0969459
+      ],
+      "match_relation": "component",
+      "distance": 0.13214025191821757,
+      "matched_component_cls_id": 9,
+      "component_cls_name": "resistor",
+      "matched_component_id": 3,
+      "component_name": "resistor",
+      "instance_match_dist_px": 98.1925915338457
+    },
+    {
+      "image": "cir1",
+      "text": "10Ω",
+      "text_box": [
+        0.396643,
+        0.595793,
+        0.133465,
+        0.0882995
+      ],
+      "match_relation": "component",
+      "distance": 0.10260723025206367,
+      "matched_component_cls_id": 9,
+      "component_cls_name": "resistor",
+      "matched_component_id": 6,
+      "component_name": "resistor",
+      "instance_match_dist_px": 70.53697616355385
+    },
+    {
+      "image": "cir1",
+      "text": "100Ω",
+      "text_box": [
+        0.800826,
+        0.872301,
+        0.204181,
+        0.093214
+      ],
+      "match_relation": "component",
+      "distance": 0.1333278381209266,
+      "matched_component_cls_id": 9,
+      "component_cls_name": "resistor",
+      "matched_component_id": 5,
+      "component_name": "resistor",
+      "instance_match_dist_px": 117.1602309186348
+    },
+    {
+      "image": "cir1",
+      "text": "100mH",
+      "text_box": [
+        0.458885,
+        0.886258,
+        0.198993,
+        0.0958026
+      ],
+      "match_relation": "component",
+      "distance": 0.11590250116369363,
+      "matched_component_cls_id": 15,
+      "component_cls_name": "inductor",
+      "matched_component_id": 1,
+      "component_name": "inductor",
+      "instance_match_dist_px": 83.23245203944379
+    },
+    {
+      "image": "cir1",
+      "text": "1H",
+      "text_box": [
+        0.343686,
+        0.0696883,
+        0.0972193,
+        0.104852
+      ],
+      "match_relation": "component",
+      "distance": 0.132322125129889,
+      "matched_component_cls_id": 15,
+      "component_cls_name": "inductor",
+      "matched_component_id": 2,
+      "component_name": "inductor",
+      "instance_match_dist_px": 93.1560414593541
+    },
+    {
+      "image": "cir1",
+      "text": "1F",
+      "text_box": [
+        0.5421,
+        0.0560748,
+        0.0878408,
+        0.101855
+      ],
+      "match_relation": "component",
+      "distance": 0.1510070675910237,
+      "matched_component_cls_id": 12,
+      "component_cls_name": "capacitor.unpolarized",
+      "matched_component_id": 7,
+      "component_name": "capacitor.unpolarized",
+      "instance_match_dist_px": 104.18076630368567
+    },
+    {
+      "image": "cir1",
+      "text": "2A",
+      "text_box": [
+        0.738851,
+        0.575316,
+        0.111361,
+        0.108696
+      ],
+      "match_relation": "component",
+      "distance": 0.1328749881392281,
+      "matched_component_cls_id": 6,
+      "component_cls_name": "voltage.dc",
+      "matched_component_id": 0,
+      "component_name": "voltage.dc",
+      "instance_match_dist_px": 132.75132847539462
+    }
+  ],
+  "nets": [
+    {
+      "id": 0,
+      "endpoint_eids": [
+        0,
+        3,
+        5,
+        12,
+        18,
+        20
+      ],
+      "component_ids": [
+        0,
+        3,
+        5
+      ]
+    },
+    {
+      "id": 1,
+      "endpoint_eids": [
+        1,
+        2,
+        4,
+        6,
+        13,
+        15,
+        17,
+        19
+      ],
+      "component_ids": [
+        1,
+        2,
+        4,
+        6
+      ]
+    },
+    {
+      "id": 2,
+      "endpoint_eids": [
+        7,
+        16
+      ],
+      "component_ids": [
+        2,
+        7
+      ]
+    },
+    {
+      "id": 3,
+      "endpoint_eids": [
+        8,
+        10
+      ],
+      "component_ids": [
+        3,
+        7
+      ]
+    },
+    {
+      "id": 4,
+      "endpoint_eids": [
+        9,
+        11
+      ],
+      "component_ids": [
+        1,
+        5
+      ]
+    },
+    {
+      "id": 5,
+      "endpoint_eids": [
+        14,
+        21
+      ],
+      "component_ids": [
+        0,
+        6
+      ]
+    }
+  ]
+}
