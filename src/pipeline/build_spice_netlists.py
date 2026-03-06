@@ -66,6 +66,7 @@ CLASS_FAMILY: Dict[str, str] = {
     "voltage.ac": "vsource_ac",
     "voltage.battery": "vsource_battery",
     "current.dc": "isource_dc",
+    "current.ac": "isource_ac",
     "resistor": "resistor",
     "resistor.adjustable": "resistor",
     "resistor.photo": "resistor",
@@ -119,11 +120,12 @@ CLASS_FAMILY: Dict[str, str] = {
 
 CLASS_ALIASES: Dict[str, str] = {
     "current.dc": "current.dc",
+    "current.ac": "current.ac",
 }
 
 EXPECTED_YOLO_CLASSES: Tuple[str, ...] = (
     "text", "junction", "crossover", "terminal", "gnd", "vss",
-    "voltage.dc", "voltage.ac", "voltage.battery", "resistor",
+    "voltage.dc", "voltage.ac", "voltage.battery", "current.ac", "resistor",
     "resistor.adjustable", "resistor.photo", "capacitor.unpolarized",
     "capacitor.polarized", "capacitor.adjustable", "inductor",
     "inductor.ferrite", "inductor.coupled", "transformer", "diode",
@@ -372,6 +374,7 @@ def choose_component_value(class_family: str, raw_texts: Sequence[str]) -> Optio
         "vsource_ac": {"", "v", "hz"},
         "vsource_battery": {"", "v"},
         "isource_dc": {"", "a"},
+        "isource_ac": {"", "a", "hz"},
         "diode_zener": {"", "v"},
     }.get(class_family, set())
 
@@ -382,28 +385,76 @@ def choose_component_value(class_family: str, raw_texts: Sequence[str]) -> Optio
     return candidates[0]
 
 
-def parse_ac_source_params(raw_texts: Sequence[str]) -> Tuple[Optional[ParsedValue], Optional[ParsedValue]]:
-    amp_candidates: List[ParsedValue] = []
+@dataclass
+class ACSourceParams:
+    amplitude: Optional[ParsedValue]
+    frequency: Optional[ParsedValue]
+    source_kind: str  # "voltage", "current", or "unknown"
+
+
+def parse_ac_source_params(raw_texts: Sequence[str]) -> ACSourceParams:
+    amp_v_candidates: List[ParsedValue] = []
+    amp_i_candidates: List[ParsedValue] = []
     freq_candidates: List[ParsedValue] = []
+    unitless_candidates: List[ParsedValue] = []
     all_candidates = parse_value_candidates(raw_texts)
 
     for cand in all_candidates:
         if cand.unit == "hz":
             freq_candidates.append(cand)
-        elif cand.unit in {"v", ""}:
-            amp_candidates.append(cand)
+        elif cand.unit == "v":
+            amp_v_candidates.append(cand)
+        elif cand.unit == "a":
+            amp_i_candidates.append(cand)
+        elif cand.unit == "":
+            unitless_candidates.append(cand)
 
-    # Handle compact combined annotations like "5V 1kHz" and fallback unitless pair [amp, freq]
-    if not freq_candidates and len(all_candidates) >= 2:
-        unitless = [c for c in all_candidates if c.unit == ""]
-        if len(unitless) >= 2:
-            amp_candidates.append(unitless[0])
-            if unitless[1].numeric >= 10:
-                freq_candidates.append(unitless[1])
+    # Fallback for OCR strings like "5 3kHz" or "1 2k".
+    if not amp_v_candidates and not amp_i_candidates and unitless_candidates:
+        amp_guess = unitless_candidates[0]
+        if freq_candidates:
+            amp_v_candidates.append(amp_guess)
+        elif len(unitless_candidates) >= 2:
+            amp_v_candidates.append(unitless_candidates[0])
+            second = unitless_candidates[1]
+            if abs(second.numeric) >= 10:
+                freq_candidates.append(ParsedValue(raw_text=second.raw_text, numeric=second.numeric, unit="hz"))
 
-    amp = amp_candidates[0] if amp_candidates else None
-    freq = freq_candidates[0] if freq_candidates else None
-    return amp, freq
+    source_kind = "unknown"
+    amplitude = None
+    if amp_i_candidates:
+        amplitude = amp_i_candidates[0]
+        source_kind = "current"
+    elif amp_v_candidates:
+        amplitude = amp_v_candidates[0]
+        source_kind = "voltage"
+
+    frequency = freq_candidates[0] if freq_candidates else None
+    return ACSourceParams(amplitude=amplitude, frequency=frequency, source_kind=source_kind)
+
+
+def infer_source_family(comp: dict, family: str, raw_texts: Sequence[str]) -> str:
+    if family not in {"vsource_dc", "vsource_ac", "vsource_battery", "isource_dc", "isource_ac"}:
+        return family
+
+    text_blob = " ".join(str(t) for t in raw_texts if t).lower()
+    candidates = parse_value_candidates(raw_texts)
+    has_a = any(c.unit == "a" for c in candidates) or bool(re.search(r"(?<![a-z])(ma|ua|a)(?![a-z])", text_blob))
+    has_v = any(c.unit == "v" for c in candidates) or bool(re.search(r"(?<![a-z])(mv|v)(?![a-z])", text_blob))
+
+    if family == "vsource_ac":
+        params = parse_ac_source_params(raw_texts)
+        if params.source_kind == "current" or (has_a and not has_v):
+            return "isource_ac"
+        return family
+
+    if family in {"vsource_dc", "vsource_battery"} and has_a and not has_v:
+        return "isource_dc"
+
+    if family in {"isource_dc", "isource_ac"} and has_v and not has_a:
+        return "vsource_ac" if family == "isource_ac" else "vsource_dc"
+
+    return family
 
 
 # -----------------------------------------------------------------------------
@@ -613,6 +664,7 @@ def default_value_for_family(family: str, class_name: str) -> str:
         "vsource_ac": "1",
         "vsource_battery": "9",
         "isource_dc": "1m",
+        "isource_ac": "1m",
     }
     return defaults.get(family, "1")
 
@@ -655,7 +707,8 @@ def render_component(
 ) -> List[str]:
     comp_id = int(comp.get("id", -1))
     cls_name = canonical_class_name(comp)
-    family = family_for_component(comp)
+    base_family = family_for_component(comp)
+    family = infer_source_family(comp, base_family, text_values)
     nets = [endpoint_to_net.get(int(ep["eid"]), f"NC_{ep['eid']}") for ep in ordered_eps]
     value = choose_component_value(family, text_values)
     raw_value_text = ", ".join(text_values) if text_values else ""
@@ -668,6 +721,7 @@ def render_component(
         "vsource_ac": "V",
         "vsource_battery": "V",
         "isource_dc": "I",
+        "isource_ac": "I",
         "diode": "D",
         "diode_led": "D",
         "diode_zener": "D",
@@ -679,6 +733,8 @@ def render_component(
     refdes = f"{prefix_base}{comp_id + 1}"
 
     comment = f"* comp_id={comp_id} class={cls_name}"
+    if family != base_family:
+        comment += f" inferred_family={family}"
     if raw_value_text:
         comment += f" OCR=[{raw_value_text}]"
 
@@ -717,15 +773,22 @@ def render_component(
         return lines
 
     if family == "vsource_ac" and need_pins(2, exact=2):
-        amp_val, freq_val = parse_ac_source_params(text_values)
-        amp = amp_val.spice if amp_val else default_value_for_family(family, cls_name)
-        freq = freq_val.spice if freq_val else "1K"
+        ac = parse_ac_source_params(text_values)
+        amp = ac.amplitude.spice if ac.amplitude else default_value_for_family(family, cls_name)
+        freq = ac.frequency.spice if ac.frequency else "1K"
         lines.append(f"{refdes} {nets[0]} {nets[1]} AC {amp} SIN(0 {amp} {freq})")
         return lines
 
     if family == "isource_dc" and need_pins(2, exact=2):
         dc_val = value.spice if value else default_value_for_family(family, cls_name)
         lines.append(f"{refdes} {nets[0]} {nets[1]} DC {dc_val}")
+        return lines
+
+    if family == "isource_ac" and need_pins(2, exact=2):
+        ac = parse_ac_source_params(text_values)
+        amp = ac.amplitude.spice if ac.amplitude else default_value_for_family(family, cls_name)
+        freq = ac.frequency.spice if ac.frequency else "1K"
+        lines.append(f"{refdes} {nets[0]} {nets[1]} AC {amp} SIN(0 {amp} {freq})")
         return lines
 
     if family in {"diode", "diode_led", "diode_zener"} and need_pins(2, exact=2):
@@ -853,7 +916,11 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    cfg = load_yaml(args.cfg)
+    cfg = {}
+    if args.cfg and os.path.isfile(args.cfg):
+        cfg = load_yaml(args.cfg)
+    elif not (args.input_dir and args.output_dir):
+        raise FileNotFoundError(f"Config file not found: {args.cfg}")
 
     final_result_root = cfg_get(cfg, "paths.final_result_root")
     if args.input_dir:
