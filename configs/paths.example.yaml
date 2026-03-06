@@ -6,7 +6,7 @@
 #    e.g. /home/yourname/Hand-Drawn-Circuit-Diagram-Recognition
 #
 # NOTE:
-# - Keep the key names unchanged (run_all.sh depends on them).
+# - Keep the key names unchanged (scripts/run_all.sh depends on them).
 # - This template assumes third-party repos and weights are placed under the project tree.
 
 project_root: __PROJECT_ROOT__
@@ -62,6 +62,9 @@ paths:
   # 最终结果输出
   final_result_root: __PROJECT_ROOT__/outputs/run1/final_result
 
+  # 新增：由 build_spice_netlists.py 自动创建并写入 .spice 网表
+  spice_netlists: __PROJECT_ROOT__/outputs/run1/spice_netlists
+
   # 共享静态资源（建议固定在 assets，而不是每个 run 都复制）
   font_dir: __PROJECT_ROOT__/assets/fonts
 
@@ -82,8 +85,8 @@ weights:
   fet_ckpt: __PROJECT_ROOT__/weights/dinov2/best_mosfet_partial_ft.pt
   dcsrc_ckpt: __PROJECT_ROOT__/weights/dinov2/best_dcsrc_partial_ft.pt
 
-  # ViTPose（cfg 建议跟 mmpose repo 配套，权重放本地 weights）
-  pose3k_cfg: __PROJECT_ROOT__/third_party/mmpose/configs/ports/vitpose_l_ports_3k_256x192_fix.py
+  # ViTPose（自定义 cfg 建议放在主仓库 configs/mmpose_ports，避免 third_party/mmpose 子模块遗漏）
+  pose3k_cfg: __PROJECT_ROOT__/configs/mmpose_ports/vitpose_l_ports_3k_256x192_fix.py
   pose3k_wts: __PROJECT_ROOT__/weights/vitpose/best_coco_AP_epoch_29.pth
-  pose2k_cfg: __PROJECT_ROOT__/third_party/mmpose/configs/ports/vitpose_l_ports_2k_256x192_fix.py
+  pose2k_cfg: __PROJECT_ROOT__/configs/mmpose_ports/vitpose_l_ports_2k_256x192_fix.py
   pose2k_wts: __PROJECT_ROOT__/weights/vitpose/best_coco_AP_epoch_30.pth
