@@ -7,12 +7,19 @@ from typing import Any
 import yaml
 
 PATH_SECTIONS = ("legacy", "paths", "weights")
+DEFAULT_HAWP_CONFIG_REL = Path("configs") / "config.yaml"
 
 
 def get_repo_root() -> Path:
     """Return repository root based on this file location."""
     # src/pipeline/config_utils.py -> repo root
     return Path(__file__).resolve().parents[2]
+
+
+def get_default_hawp_config_path(repo_root: str | Path | None = None) -> Path:
+    """Return the repository-tracked default HAWP config path."""
+    repo_root = Path(repo_root) if repo_root is not None else get_repo_root()
+    return (repo_root / DEFAULT_HAWP_CONFIG_REL).resolve()
 
 
 def get_default_config_path(repo_root: str | Path | None = None) -> Path:
@@ -75,5 +82,9 @@ def load_paths_config(cfg_path: str | Path | None = None) -> dict:
         value = cfg.get(section, {})
         if isinstance(value, dict):
             resolved[section] = _resolve_path_value(value, repo_root)
+
+    weights = resolved.setdefault("weights", {})
+    if isinstance(weights, dict):
+        weights.setdefault("hawp_cfg", str(get_default_hawp_config_path(repo_root)))
 
     return resolved

@@ -10,6 +10,7 @@
 # - Keep the key names unchanged (scripts/run_all.sh and Python scripts depend on them).
 # - Do not replace values with absolute paths unless you intentionally want a machine-specific override.
 # - This template assumes third-party repos and weights are placed under the project tree.
+# - HAWP config is now tracked in the repository at configs/config.yaml rather than under weights/.
 
 project_root: null
 
@@ -59,7 +60,7 @@ weights:
   parseq_charset: assets/meta/parseq_charset.txt
 
   # HAWP
-  hawp_cfg: weights/hawp/config.yaml
+  hawp_cfg: configs/config.yaml
   hawp_ckpt: weights/hawp/last_epoch_035.pth
 
   # DINOv2 subtype classifiers

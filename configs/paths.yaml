@@ -1,6 +1,7 @@
 project_root: null
 
 # External repositories vendored inside this repository.
+# HAWP config is tracked in-repo at configs/config.yaml rather than under weights/.
 legacy:
   work_root: outputs/run1
   runs_root: outputs/run1/yolo_detect
@@ -66,7 +67,7 @@ weights:
   parseq_charset: assets/meta/parseq_charset.txt
 
   # HAWP (cfg + ckpt)
-  hawp_cfg: weights/hawp/config.yaml
+  hawp_cfg: configs/config.yaml
   hawp_ckpt: weights/hawp/last_epoch_035.pth
 
   # DINOv2 subtype classifiers

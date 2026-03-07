@@ -1,6 +1,12 @@
 from __future__ import annotations
 
-from config_utils import get_default_config_path, get_repo_root, load_paths_config, project_path
+from config_utils import (
+    get_default_config_path,
+    get_default_hawp_config_path,
+    get_repo_root,
+    load_paths_config,
+    project_path,
+)
 
 
 def _project_root() -> str:
@@ -31,3 +37,4 @@ def cfg_get(*keys, default=None, cfg=None):
 
 PROJECT_ROOT = _project_root()
 DEFAULT_CFG_PATH = str(get_default_config_path())
+DEFAULT_HAWP_CONFIG_PATH = str(get_default_hawp_config_path())

@@ -11,6 +11,13 @@ This project provides an **end-to-end framework** that converts hand-drawn circu
 
 The system combines deep learning perception modules with structural reasoning to recover circuit topology, component semantics, and simulation-oriented structure from noisy hand-drawn inputs.
 
+## Project Resources
+
+- **GitHub repository (code):** `https://github.com/wanghaoyu6661/Hand-Drawn-Circuit-Diagram-Recognition`
+- **Hugging Face repository (model weights):** `https://huggingface.co/why0722/hcd-circuit-weights`
+
+The GitHub repository contains the codebase, scripts, configs, and documentation. The Hugging Face repository hosts the released pretrained weights required for public reproduction.
+
 ---
 
 ## 1. Repository Structure
@@ -22,13 +29,14 @@ Hand-Drawn-Circuit-Diagram-Recognition/
 │
 ├── assets/                     # static resources (fonts, metadata)
 ├── configs/                    # portable YAML configuration files
+│   ├── config.yaml             # HAWP config used by the pipeline
 │   ├── paths.yaml
 │   ├── paths.example.yaml
 │   └── mmpose_ports/
 │
 ├── data/
-│   ├── inputs/                 # input circuit images
-│   └── ground_truth/           # evaluation data (if used)
+│   ├── inputs/                 # input circuit images (includes 5 example hand-drawn circuits)
+│   └── ground_truth/           # corresponding GT annotations for the 5 example circuits
 │
 ├── docs/                       # supplementary docs / notes
 ├── logs/                       # runtime logs
@@ -53,33 +61,64 @@ Hand-Drawn-Circuit-Diagram-Recognition/
 ├── third_party/                # external repositories (HAWP, PARSeq, MMPose)
 ├── tests/                      # tests / local checks
 ├── weights/                    # pretrained model weights
-├── environment.yml             # conda environment definition
+├── environment.yml             # recommended public reproduction environment
+├── environment.full.yml        # stricter pinned reproduction environment
 └── README.md
 ```
+
+### Important note on `third_party/mmpose`
+
+`third_party/mmpose` is tracked as a **Git submodule** pinned to a specific upstream commit. That means it behaves differently from ordinary folders such as `third_party/HAWP` or `third_party/parseq-main`.
+
+If you download this project as a **GitHub zip/tar source archive**, or use a clone that does **not** initialize submodules, the `third_party/mmpose` directory may be incomplete or may only contain a submodule pointer. In that case, MMPose config files such as:
+
+```text
+third_party/mmpose/configs/_base_/default_runtime.py
+```
+
+will be missing, and the pipeline will fail during the ViTPose stage.
+
+For this reason, the recommended way to obtain the repository is a recursive clone.
 
 ---
 
 ## 2. Clone the Repository
 
+Recommended:
+
 ```bash
-git clone https://github.com/wanghaoyu6661/Hand-Drawn-Circuit-Diagram-Recognition.git
+git clone --recursive https://github.com/wanghaoyu6661/Hand-Drawn-Circuit-Diagram-Recognition.git
 cd Hand-Drawn-Circuit-Diagram-Recognition
 ```
 
-If your clone does not yet contain the third-party dependencies, initialize them as needed:
+If you already cloned without submodules, initialize them afterward:
 
 ```bash
 git submodule update --init --recursive
 ```
 
+If you obtained the project through a GitHub zip/tar download, you should manually verify that `third_party/mmpose/` contains the expected config tree before running the pipeline.
+
 ---
 
 ## 3. Create the Conda Environment
 
-Create the project environment:
+Use one of the two provided Conda environments:
+
+- `environment.yml`: recommended public reproduction environment
+- `environment.full.yml`: stricter pinned environment for closer reproduction on Ubuntu + CUDA 11.8
+
+Recommended setup:
 
 ```bash
 conda env create -f environment.yml
+conda activate hcd_pipeline_v2
+```
+
+Pinned variant:
+
+```bash
+conda env create -f environment.full.yml
 conda activate hcd_pipeline_v2
 ```
 
@@ -90,21 +129,34 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate hcd_pipeline_v2
 ```
 
+### Post-create OpenMMLab step
+
+After the environment is created, install the OpenMMLab wheel stack:
+
+```bash
+pip install -U openmim
+mim install "mmcv==2.1.0"
+pip install "mmengine==0.10.7" "mmdet==3.3.0" "mmpose==1.3.2" "mmpretrain==1.2.0"
+```
+
+These commands are intentionally kept as a post-create step because this has proven more stable on fresh-machine reproduction than forcing the entire OpenMMLab stack through a single Conda environment solve.
+
 ---
 
 ## 4. Portable Path Configuration
 
-This repository now uses a **portable YAML configuration scheme**.
+This repository uses a **portable YAML configuration scheme**.
 
 ### Default behavior
 
-The default file:
+The default files:
 
 ```text
 configs/paths.yaml
+configs/config.yaml
 ```
 
-uses **repository-relative paths**, and the shared loader:
+use **repository-relative paths**, and the shared loader:
 
 ```text
 src/pipeline/config_utils.py
@@ -146,6 +198,14 @@ This is useful when your local weight locations or output locations differ from 
 
 Pretrained model weights must be prepared separately.
 
+Released public weights are hosted at:
+
+```text
+https://huggingface.co/why0722/hcd-circuit-weights
+```
+
+Download the required files from the Hugging Face repository and place them into the local `weights/` directory according to the layout below.
+
 Expected directory layout:
 
 ```text
@@ -157,7 +217,6 @@ weights/
 │   └── best_parseq.pt
 │
 ├── hawp/
-│   ├── config.yaml
 │   └── last_epoch_035.pth
 │
 ├── dinov2/
@@ -171,6 +230,18 @@ weights/
 ```
 
 If you keep the default repository structure, place the weights under `weights/` as shown above. If your local layout differs, override the corresponding entries in `configs/paths.local.yaml`.
+
+### Note on HAWP configuration
+
+The HAWP checkpoint is stored under:
+
+- `weights/hawp/last_epoch_035.pth`
+
+The HAWP runtime config is stored in the repository config directory:
+
+- `configs/config.yaml`
+
+So the pipeline no longer expects `weights/hawp/config.yaml`. If you reproduce the project from scratch, make sure both the released HAWP checkpoint and the repository-side `configs/config.yaml` are present.
 
 ---
 
@@ -191,6 +262,30 @@ jpeg
 ```
 
 Each image will be processed independently.
+
+### Included example inputs and ground truth
+
+This repository already provides a small runnable example set for quick verification:
+
+- `data/inputs/` contains **5 hand-drawn circuit images**:
+  - `cir1.jpg`
+  - `cir2.jpg`
+  - `cir3.jpg`
+  - `cir4.jpg`
+  - `cir5.jpg`
+- `data/ground_truth/` contains the **corresponding ground-truth annotations**:
+  - `cir1.gt.json`
+  - `cir2.gt.json`
+  - `cir3.gt.json`
+  - `cir4.gt.json`
+  - `cir5.gt.json`
+
+These 5 bundled examples can be used directly to:
+
+1. run the full pipeline end to end, and
+2. run the final evaluation script against the provided GT annotations.
+
+So even without preparing your own images first, you can use the repository-provided sample set to verify that the public release is configured correctly.
 
 ---
 
@@ -220,6 +315,14 @@ The shell entry script automatically:
 - prefers `configs/paths.local.yaml` when present
 - otherwise falls back to `configs/paths.yaml`
 - resolves configuration paths through the shared portable config loader
+
+If you are running from a shell session where local third-party packages are not already discoverable, set:
+
+```bash
+export PYTHONPATH="$PWD/third_party/HAWP:$PWD/third_party/parseq-main:$PYTHONPATH"
+```
+
+before launching `run_all.sh`.
 
 ---
 
@@ -306,7 +409,14 @@ reports/eval/
 data/ground_truth/
 ```
 
-You can adapt these components to benchmark final JSON outputs against ground-truth annotations.
+The repository already includes a small paired example set for evaluation:
+
+- input images: `data/inputs/cir1.jpg` to `data/inputs/cir5.jpg`
+- GT annotations: `data/ground_truth/cir1.gt.json` to `data/ground_truth/cir5.gt.json`
+
+After running the pipeline on these 5 example images, you can use the evaluation script in `scripts/eval/evaluate_dimensions.py` to compare the generated final JSON outputs against the provided GT files.
+
+This makes the repository self-contained for a quick end-to-end smoke test of both inference and evaluation.
 
 ---
 

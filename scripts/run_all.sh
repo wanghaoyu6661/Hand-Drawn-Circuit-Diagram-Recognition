@@ -31,6 +31,7 @@ fi
 ###############################################
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PIPELINE_DIR="$PROJECT_ROOT/src/pipeline"
+DEFAULT_HAWP_CFG="$PROJECT_ROOT/configs/config.yaml"
 
 # 优先使用本地覆盖配置（不提交 GitHub），否则用默认配置
 if [ -f "$PROJECT_ROOT/configs/paths.local.yaml" ]; then
@@ -156,9 +157,14 @@ echo "🔥 全流程开始运行（YAML驱动版）"
 echo "📁 PROJECT_ROOT   = $PROJECT_ROOT"
 echo "📄 CFG_FILE       = $CFG_FILE"
 echo "🐍 CONDA_ENV      = $CONDA_ENV_NAME"
+echo "🧩 HAWP_CFG       = $HAWP_CFG"
 echo "📁 RUN_DIR        = $RUN_DIR"
 echo "📁 SPICE_OUT_DIR  = $SPICE_NETLIST_DIR"
 echo "======================================="
+
+if [ "$HAWP_CFG" = "$DEFAULT_HAWP_CFG" ]; then
+  echo "ℹ️ HAWP 配置默认来自: $DEFAULT_HAWP_CFG"
+fi
 
 ############################################
 # 1. YOLOv10 检测

@@ -1,266 +1,76 @@
 name: hcd_pipeline_v2
+# Stricter pinned environment for reproduction on Ubuntu + CUDA 11.8.
+# This file keeps exact major runtime pins, removes public-reproduction conflicts,
+# omits the local prefix path, and restores runtime packages that were proven
+# necessary during fresh-machine AutoDL validation.
+# Post-create OpenMMLab step:
+#   conda activate hcd_pipeline_v2
+#   pip install -U openmim
+#   mim install "mmcv==2.1.0"
+#   pip install "mmengine==0.10.7" "mmdet==3.3.0" "mmpose==1.3.2" "mmpretrain==1.2.0"
 channels:
   - pytorch
   - nvidia
   - conda-forge
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
   - defaults
-  - https://repo.anaconda.com/pkgs/main
-  - https://repo.anaconda.com/pkgs/r
+
 dependencies:
-  - _libgcc_mutex=0.1=main
-  - _openmp_mutex=4.5=7_kmp_llvm
-  - aom=3.12.1=h7934f7d_0
-  - blas=1.0=mkl
-  - blas-devel=3.9.0=12_linux64_mkl
-  - brotlicffi=1.0.9.2=py39hbdd6827_2
-  - bzip2=1.0.8=h5eee18b_6
-  - ca-certificates=2025.12.2=h06a4308_0
-  - cairo=1.18.4=h44eff21_0
-  - certifi=2025.10.5=py39h06a4308_0
-  - cffi=2.0.0=py39h4eded50_0
-  - charset-normalizer=3.4.4=py39h06a4308_0
-  - cuda-cudart=11.8.89=0
-  - cuda-cupti=11.8.87=0
-  - cuda-libraries=11.8.0=0
-  - cuda-nvrtc=11.8.89=0
-  - cuda-nvtx=11.8.86=0
-  - cuda-runtime=11.8.0=0
-  - cuda-version=12.9=3
-  - dav1d=1.2.1=h5eee18b_0
-  - expat=2.7.3=h7354ed3_4
-  - ffmpeg=6.1.1=hecf7045_5
-  - fontconfig=2.15.0=h2c49b7f_0
-  - freetype=2.13.3=h4a9f257_0
-  - fribidi=1.0.10=h7b6447c_0
-  - fsspec=2025.7.0=py39he3bba80_0
-  - giflib=5.2.2=h5eee18b_0
-  - gmp=6.3.0=h6a678d5_0
-  - gmpy2=2.2.1=py39h5eee18b_0
-  - graphite2=1.3.14=h295c915_1
-  - harfbuzz=10.2.0=hdfddeaa_1
-  - icu=73.1=h6a678d5_0
-  - idna=3.11=py39h06a4308_0
-  - importlib-metadata=8.5.0=py39h06a4308_0
-  - intel-openmp=2021.4.0=h06a4308_3561
-  - ittapi=3.26.3=py39h818bca1_0
-  - ittapi-static=3.26.3=hecca717_0
-  - jinja2=3.1.6=py39h06a4308_0
-  - jpeg=9f=h5ce9db8_0
-  - lame=3.100=h7b6447c_0
-  - lcms2=2.17=heab6991_0
-  - ld_impl_linux-64=2.44=h153f514_2
-  - leptonica=1.82.0=hfdeec58_3
-  - lerc=4.0.0=h6a678d5_0
-  - libabseil=20250127.0=cxx17_h6a678d5_0
-  - libarchive=3.8.2=h3ec8f01_0
-  - libavif=1.3.0=h3539ee5_0
-  - libblas=3.9.0=12_linux64_mkl
-  - libcblas=3.9.0=12_linux64_mkl
-  - libcublas=11.11.3.6=0
-  - libcufft=10.9.0.58=0
-  - libcufile=1.14.1.1=4
-  - libcurand=10.3.10.19=0
-  - libcusolver=11.4.1.48=0
-  - libcusparse=11.7.5.86=0
-  - libdeflate=1.22=h5eee18b_0
-  - libexpat=2.7.3=h7354ed3_4
-  - libffi=3.4.4=h6a678d5_1
-  - libgcc=15.2.0=h69a1729_7
-  - libgcc-ng=15.2.0=h166f726_7
-  - libgfortran=15.2.0=h166f726_7
-  - libgfortran-ng=15.2.0=h166f726_7
-  - libgfortran5=15.2.0=hc633d37_7
-  - libglib=2.84.4=h77a78f3_0
-  - libgomp=15.2.0=h4751f2c_7
-  - libhwloc=2.12.1=default_h3d81e11_1000
-  - libiconv=1.16=h5eee18b_3
-  - liblapack=3.9.0=12_linux64_mkl
-  - liblapacke=3.9.0=12_linux64_mkl
-  - libnpp=11.8.0.86=0
-  - libnsl=2.0.0=h5eee18b_0
-  - libnvjpeg=11.9.0.86=0
-  - libogg=1.3.5=h27cfd23_1
-  - libopenblas=0.3.30=h46f56fc_2
-  - libopenjpeg=2.5.4=hee96239_1
-  - libopus=1.3.1=h5eee18b_1
-  - libpng=1.6.50=h2ed474d_0
-  - libprotobuf=5.29.3=h3cdef7c_1
-  - libstdcxx=15.2.0=h39759b7_7
-  - libstdcxx-ng=15.2.0=hc03a8fd_7
-  - libtheora=1.2.0=h32ad74f_1
-  - libtiff=4.7.1=h029b1ac_0
-  - libuuid=1.41.5=h5eee18b_0
-  - libuv=1.48.0=h5eee18b_0
-  - libvorbis=1.3.7=h7b6447c_0
-  - libvpx=1.15.2=h4cb591d_0
-  - libwebp=1.6.0=h089d785_0
-  - libwebp-base=1.6.0=hb7bb969_0
-  - libxcb=1.17.0=h9b100fa_0
-  - libxml2=2.13.9=h2c43086_0
-  - libzlib=1.3.1=hb25bd0a_0
-  - llvm-openmp=20.1.8=hc2b8361_0
-  - lz4-c=1.9.4=h6a678d5_1
-  - markupsafe=3.0.2=py39h5eee18b_0
-  - mkl=2021.4.0=h06a4308_640
-  - mkl-devel=2021.4.0=h66538d2_640
-  - mkl-include=2021.4.0=h06a4308_640
-  - mkl-service=2.4.0=py39h7f8727e_0
-  - mpc=1.3.1=h5eee18b_0
-  - mpfr=4.2.1=h5eee18b_0
-  - mpmath=1.3.0=py39h06a4308_0
-  - ncurses=6.5=h7934f7d_0
-  - networkx=3.2.1=py39h06a4308_0
-  - numpy=1.26.4=py39h474f0d3_0
-  - openh264=2.6.0=he621ea3_0
-  - openjpeg=2.5.4=h4e0627c_1
-  - openssl=3.6.0=h26f9b46_0
-  - opentelemetry-api=1.37.0=py39h06a4308_0
-  - pcre2=10.46=hf426167_0
-  - pillow=11.3.0=py39hb1c3d2d_0
-  - pixman=0.46.4=h7934f7d_0
-  - pthread-stubs=0.3=h0ce48e5_1
-  - pycparser=2.23=py39h06a4308_0
-  - pysocks=1.7.1=py39h06a4308_1
-  - python=3.9.25=h0dcde21_1
-  - python_abi=3.9=2_cp39
-  - pytorch=2.0.1=py3.9_cuda11.8_cudnn8.7.0_0
-  - pytorch-cuda=11.8=h7e8668a_6
-  - pytorch-mutex=1.0=cuda
-  - readline=8.3=hc2a1206_0
-  - six=1.17.0=py39h06a4308_0
-  - sleef=3.9.0=ha0421bc_0
-  - sqlite=3.51.0=h2a70700_0
-  - sympy=1.14.0=py39h06a4308_0
-  - tbb=2022.3.0=h8d10470_1
-  - tesseract=5.2.0=hb0d2e87_3
-  - tk=8.6.15=h54e0aa7_0
-  - torchaudio=2.0.2=py39_cu118
-  - torchvision=0.15.2=py39_cu118
-  - typing-extensions=4.15.0=py39h06a4308_0
-  - typing_extensions=4.15.0=py39h06a4308_0
-  - wheel=0.45.1=py39h06a4308_0
-  - xorg-libx11=1.8.12=h9b100fa_1
-  - xorg-libxau=1.0.12=h9b100fa_0
-  - xorg-libxdmcp=1.1.5=h9b100fa_0
-  - xorg-libxext=1.3.6=h9b100fa_0
-  - xorg-libxrender=0.9.12=h9b100fa_0
-  - xorg-xorgproto=2024.1=h5eee18b_1
-  - xz=5.6.4=h5eee18b_1
-  - zipp=3.21.0=py39h06a4308_0
-  - zlib=1.3.1=hb25bd0a_0
-  - zstd=1.5.7=h11fc155_0
+  - python=3.9.25
+  - pip
+  - pytorch=2.0.1
+  - torchvision=0.15.2
+  - torchaudio=2.0.2
+  - pytorch-cuda=11.8
+  - ffmpeg=6.1.1
+  - tesseract=5.2.0
+  - leptonica=1.82.0
+  - numpy=1.26.4
+  - scipy=1.13.1
+  - scikit-image=0.21.0
+  - scikit-learn=1.3.2
+  - matplotlib=3.9.4
+  - pillow=11.3.0
+  - pyyaml=6.0.3
+  - shapely=2.0.7
+  - networkx=3.2.1
+  - pandas=2.3.3
+  - h5py=3.11.0
   - pip:
+      - packaging==24.2
       - addict==2.4.0
-      - aiohappyeyeballs==2.6.1
-      - aiohttp==3.13.3
-      - aiosignal==1.4.0
-      - aliyun-python-sdk-core==2.16.0
-      - aliyun-python-sdk-kms==2.16.5
-      - annotated-doc==0.0.4
-      - anyio==4.12.1
-      - async-timeout==5.0.1
-      - attrs==25.4.0
       - chumpy==0.70
-      - click==8.1.8
-      - colorama==0.4.6
-      - contourpy==1.3.0
-      - crcmod==1.7
-      - cryptography==46.0.3
-      - cycler==0.12.1
-      - cython==3.1.6
       - easydict==1.13
       - einops==0.8.1
-      - exceptiongroup==1.3.1
       - filelock==3.14.0
-      - fonttools==4.60.2
-      - frozenlist==1.8.0
       - git-filter-repo==2.47.0
-      - h11==0.16.0
-      - h5py==3.11.0
-      - hf-xet==1.3.2
-      - httpcore==1.0.9
-      - httpx==0.28.1
       - huggingface-hub==1.1.5
       - imageio==2.35.1
-      - importlib-resources==6.5.2
-      - jmespath==0.10.0
-      - joblib==1.5.2
       - json-tricks==3.17.3
-      - kiwisolver==1.4.7
       - kornia==0.7.3
       - kornia-rs==0.1.10
-      - lazy-loader==0.4
-      - lightning-utilities==0.15.2
-      - markdown==3.9
-      - markdown-it-py==3.0.0
       - mat4py==0.6.0
-      - matplotlib==3.9.4
-      - mdurl==0.1.2
-      - mmcv==2.1.0
-      - mmdet==3.3.0
-      - mmengine==0.10.7
-      - mmpose==1.3.2
-      - mmpretrain==1.2.0
       - model-index==0.1.11
       - modelindex==0.0.2
-      - multidict==6.7.1
-      - munkres==1.1.4
-      - ninja==1.13.0
       - nltk==3.9.2
-      - opencv-contrib-python==4.11.0.86
-      - opencv-python==4.11.0.86
-      - opendatalab==0.0.10
       - openmim==0.3.9
-      - openxlab==0.1.3
-      - ordered-set==4.1.0
-      - oss2==2.17.0
-      - packaging==25.0
-      - pandas==2.3.3
-      - pip==24.3.1
-      - platformdirs==4.4.0
-      - polars==1.36.1
-      - polars-runtime-32==1.36.1
-      - propcache==0.4.1
-      - psutil==7.2.2
+      - opencv-contrib-python==4.11.0.86
       - pycocotools==2.0.11
       - pycryptodome==3.23.0
-      - pygments==2.19.2
-      - pyparsing==3.2.5
-      - python-dateutil==2.9.0.post0
       - python-json-logger==4.0.0
       - pytorch-lightning==2.0.9
-      - pytz==2023.4
       - pywavelets==1.4.1
-      - pyyaml==6.0.3
-      - regex==2025.11.3
       - requests==2.28.2
       - rich==13.4.2
       - safetensors==0.7.0
-      - scikit-image==0.21.0
-      - scikit-learn==1.3.2
-      - scipy==1.13.1
       - seaborn==0.13.2
-      - setuptools==80.9.0
-      - shapely==2.0.7
-      - shellingham==1.5.4
       - tabulate==0.9.0
       - termcolor==3.1.0
       - terminaltables==3.1.10
-      - threadpoolctl==3.6.0
-      - tifffile==2024.8.30
       - timm==1.0.22
-      - tomli==2.3.0
       - torchmetrics==0.11.4
       - tqdm==4.65.2
-      - typer==0.23.2
-      - typer-slim==0.23.2
-      - tzdata==2025.3
       - ultralytics==8.3.232
       - ultralytics-thop==2.0.18
-      - urllib3==1.26.20
       - xtcocotools==1.14.3
       - yacs==0.1.8
       - yapf==0.43.0
-      - yarl==1.22.0
-prefix: /root/autodl-tmp/conda_envs/hcd_pipeline_v2
