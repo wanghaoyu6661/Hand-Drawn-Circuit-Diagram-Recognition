@@ -1,57 +1,72 @@
 # Hand-Drawn-Circuit-Diagram-Recognition
 
-Deep learning–based recognition and structural parsing pipeline for **hand‑drawn circuit diagrams**.
+Deep learning–based recognition and structural parsing pipeline for **hand-drawn circuit diagrams**.
 
-This project provides an **end‑to‑end framework** that converts hand‑drawn circuit schematics into structured machine‑readable representations, including:
+This project provides an **end-to-end framework** that converts hand-drawn circuit schematics into structured machine-readable representations, including:
 
 - intermediate outputs for each processing stage
 - final structured JSON (`*.final.json`)
 - visualization images (`*_final.png`)
 - SPICE netlists (`*.spice`) ready for circuit simulation tools
 
-The system combines deep learning perception modules with structural reasoning to reconstruct circuit topology and semantics from noisy hand‑drawn inputs.
+The system combines deep learning perception modules with structural reasoning to recover circuit topology, component semantics, and simulation-oriented structure from noisy hand-drawn inputs.
 
 ---
 
-# 1. Repository Structure
+## 1. Repository Structure
 
 Typical repository layout:
 
-```
+```text
 Hand-Drawn-Circuit-Diagram-Recognition/
 │
-├── assets/                 # static resources (fonts, meta files)
-├── configs/                # YAML configuration files
+├── assets/                     # static resources (fonts, metadata)
+├── configs/                    # portable YAML configuration files
 │   ├── paths.yaml
-│   └── paths.example.yaml
+│   ├── paths.example.yaml
+│   └── mmpose_ports/
 │
 ├── data/
-│   └── inputs/             # input circuit images
+│   ├── inputs/                 # input circuit images
+│   └── ground_truth/           # evaluation data (if used)
+│
+├── docs/                       # supplementary docs / notes
+├── logs/                       # runtime logs
+├── outputs/                    # pipeline outputs
+├── reports/
+│   └── eval/                   # evaluation reports
 │
 ├── scripts/
-│   └── run_all.sh          # full pipeline entry point
+│   ├── run_all.sh              # full pipeline entry point
+│   └── eval/                   # evaluation scripts
 │
 ├── src/
-│   └── pipeline/           # main processing modules
+│   └── pipeline/
+│       ├── config_utils.py     # shared portable config loader
+│       ├── path_config.py      # compatibility wrapper
+│       ├── fuse_yolo_parseq.py
+│       ├── build_connections.py
+│       ├── build_final_json.py
+│       ├── build_spice_netlists.py
+│       └── ...
 │
-├── third_party/            # external repositories (HAWP, PARSeq, MMPose)
-│
-├── environment.yml         # conda environment definition
+├── third_party/                # external repositories (HAWP, PARSeq, MMPose)
+├── tests/                      # tests / local checks
+├── weights/                    # pretrained model weights
+├── environment.yml             # conda environment definition
 └── README.md
 ```
 
 ---
 
-# 2. Clone the Repository
-
-Clone the public repository:
+## 2. Clone the Repository
 
 ```bash
 git clone https://github.com/wanghaoyu6661/Hand-Drawn-Circuit-Diagram-Recognition.git
 cd Hand-Drawn-Circuit-Diagram-Recognition
 ```
 
-Initialize third‑party submodules:
+If your clone does not yet contain the third-party dependencies, initialize them as needed:
 
 ```bash
 git submodule update --init --recursive
@@ -59,9 +74,9 @@ git submodule update --init --recursive
 
 ---
 
-# 3. Create the Conda Environment
+## 3. Create the Conda Environment
 
-Create the project environment using the provided YAML file:
+Create the project environment:
 
 ```bash
 conda env create -f environment.yml
@@ -77,47 +92,63 @@ conda activate hcd_pipeline_v2
 
 ---
 
-# 4. Configure Paths
+## 4. Portable Path Configuration
 
-This project uses a YAML‑based configuration system.
+This repository now uses a **portable YAML configuration scheme**.
 
-We recommend creating a **local configuration file** instead of modifying the default repository configuration.
+### Default behavior
 
-### Step 1
+The default file:
 
-Copy the example configuration:
+```text
+configs/paths.yaml
+```
+
+uses **repository-relative paths**, and the shared loader:
+
+```text
+src/pipeline/config_utils.py
+```
+
+automatically resolves them against the repository root.
+
+That means:
+
+- you do **not** need to replace `__PROJECT_ROOT__`
+- you do **not** need to hard-code `/root/autodl-tmp/...`
+- if the repository structure is kept unchanged, the default config can be used directly after cloning
+
+### Optional local override
+
+If you want machine-specific overrides, create:
 
 ```bash
 cp configs/paths.example.yaml configs/paths.local.yaml
 ```
 
-### Step 2
+Then edit only the entries you want to override. The pipeline automatically prefers:
 
-Edit the file and replace
-
-```
-__PROJECT_ROOT__
+```text
+configs/paths.local.yaml
 ```
 
-with the **absolute path of your local repository**.
+over:
 
-Example:
-
-```
-/home/user/Hand-Drawn-Circuit-Diagram-Recognition
+```text
+configs/paths.yaml
 ```
 
-The pipeline automatically prefers `paths.local.yaml` if it exists.
+This is useful when your local weight locations or output locations differ from the default repository layout.
 
 ---
 
-# 5. Download Model Weights
+## 5. Download Model Weights
 
-Pretrained model weights must be downloaded separately.
+Pretrained model weights must be prepared separately.
 
-Example directory layout expected by the pipeline:
+Expected directory layout:
 
-```
+```text
 weights/
 ├── yolo/
 │   └── best.pt
@@ -139,71 +170,75 @@ weights/
     └── best_coco_AP_epoch_30.pth
 ```
 
-Place the weights in the directories specified by `configs/paths.local.yaml`.
+If you keep the default repository structure, place the weights under `weights/` as shown above. If your local layout differs, override the corresponding entries in `configs/paths.local.yaml`.
 
 ---
 
-# 6. Prepare Input Images
+## 6. Prepare Input Images
 
 Place circuit images into:
 
-```
+```text
 data/inputs/
 ```
 
-Supported formats include:
+Typical supported formats include:
 
-```
+```text
 png
 jpg
 jpeg
 ```
 
-Each image will be processed independently by the pipeline.
+Each image will be processed independently.
 
 ---
 
-# 7. Run the Full Pipeline
+## 7. Run the Full Pipeline
 
-Execute the complete recognition pipeline:
+Execute the complete pipeline:
 
 ```bash
 bash scripts/run_all.sh
 ```
 
-The pipeline automatically performs:
+The current full pipeline includes these execution stages:
 
 1. YOLOv10 component detection
-2. PARSeq text recognition
-3. component suppression for topology reasoning
-4. HAWP junction detection
-5. junction merging
-6. wire enhancement
-7. connectivity inference
-8. component subtype classification
-9. port semantic inference
-10. final structured JSON generation
-11. SPICE netlist export
+2. image scanification / crop generation
+3. PARSeq text recognition and fusion
+4. component-region suppression for topology reasoning
+5. HAWP junction detection
+6. junction merging and wire enhancement
+7. connectivity inference, subtype refinement, and port semantic inference
+8. final structured JSON generation and visualization export
+9. SPICE netlist generation
+
+The shell entry script automatically:
+
+- locates the repository root
+- prefers `configs/paths.local.yaml` when present
+- otherwise falls back to `configs/paths.yaml`
+- resolves configuration paths through the shared portable config loader
 
 ---
 
-# 8. Main Output Files
+## 8. Main Output Files
 
 After the pipeline completes, outputs are generated under:
 
-```
+```text
 outputs/run1/
 ```
 
-Example:
+Typical outputs:
 
-```
+```text
 outputs/run1/
 │
 ├── final_result/
 │   ├── img/
 │   │   └── *_final.png
-│   │
 │   └── json/
 │       └── *.final.json
 │
@@ -211,27 +246,27 @@ outputs/run1/
     └── *.spice
 ```
 
+Intermediate outputs from detection, OCR, HAWP, merged points, link inference, and port classification are also stored under the same run directory.
+
 ---
 
-# 9. SPICE Netlist Generation
+## 9. SPICE Netlist Generation
 
-The final step automatically converts structured circuit JSON files into SPICE netlists.
+The final exporter:
 
-The exporter:
-
-```
+```text
 src/pipeline/build_spice_netlists.py
 ```
 
-reads
+reads:
 
-```
+```text
 outputs/run1/final_result/json/*.final.json
 ```
 
-and generates
+and generates:
 
-```
+```text
 outputs/run1/spice_netlists/*.spice
 ```
 
@@ -246,26 +281,41 @@ Supported native SPICE components include:
 - BJTs
 - MOSFETs
 
-For abstract or high‑level components (logic gates, IC blocks, etc.), placeholder `.SUBCKT` definitions are automatically generated so the resulting netlist remains syntactically complete.
+For abstract or high-level components, placeholder `.SUBCKT` definitions are emitted when needed so the resulting netlist remains syntactically complete.
 
 ---
 
-# 10. Notes
+## 10. Notes
 
 Important implementation details:
 
-- OCR‑recognized text values such as `10k`, `100mH`, or `9V` are propagated into the generated netlists when possible.
-- Ground symbols (`gnd`, `vss`) are normalized to SPICE node `0`.
-- The pipeline uses a unified YAML configuration system shared across all modules.
+- OCR-recognized values such as `10k`, `100mH`, and `9V` are propagated into generated netlists when possible.
+- Ground-like symbols such as `gnd` or `vss` are normalized to SPICE node `0`.
+- All pipeline modules share the same YAML-driven configuration system.
+- The portable configuration design makes the project easier to clone and run on a different machine without rewriting hard-coded absolute paths.
 
 ---
 
-# 11. Citation
+## 11. Evaluation
 
-If you use this project in research, please cite the corresponding paper.
+Evaluation-related scripts and reports are organized under:
+
+```text
+scripts/eval/
+reports/eval/
+data/ground_truth/
+```
+
+You can adapt these components to benchmark final JSON outputs against ground-truth annotations.
 
 ---
 
-# 12. License
+## 12. Citation
 
-This project is released for research purposes. Please check the repository for license information.
+If you use this project in research, please cite the corresponding paper and repository release.
+
+---
+
+## 13. License
+
+This project is released for research purposes. Please refer to the repository for license details and any third-party license requirements.

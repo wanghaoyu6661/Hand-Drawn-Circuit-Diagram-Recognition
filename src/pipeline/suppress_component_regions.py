@@ -4,7 +4,7 @@ import os
 import cv2
 import glob
 import numpy as np
-from path_config import cfg_get
+from path_config import cfg_get, project_path
 
 # ===============================
 #   与 remove_components.py 完全同步
@@ -80,9 +80,9 @@ def load_yolo_boxes_with_expand(label_path, W, H):
 # ===============================
 
 def main():
-    IMG_DIR = cfg_get("paths", "src_img", default="/root/autodl-tmp/final_result/src_img")
-    LABEL_DIR = cfg_get("paths", "yolo_labels", default="/root/autodl-tmp/final_result/yolo_detect/exp/labels")
-    OUT_DIR = cfg_get("paths", "suppressed_img", default="/root/autodl-tmp/final_result/lama_clean")
+    IMG_DIR = cfg_get("paths", "src_img", default=project_path("data", "inputs"))
+    LABEL_DIR = cfg_get("paths", "yolo_labels", default=project_path("outputs", "run1", "yolo_detect", "exp", "labels"))
+    OUT_DIR = cfg_get("paths", "suppressed_img", default=project_path("outputs", "run1", "suppressed_img"))
     os.makedirs(OUT_DIR, exist_ok=True)
 
     img_paths = glob.glob(os.path.join(IMG_DIR, "*"))

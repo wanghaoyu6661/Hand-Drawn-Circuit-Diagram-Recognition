@@ -8,16 +8,16 @@ import math
 import cv2
 import numpy as np
 
-from path_config import cfg_get
+from path_config import cfg_get, project_path
 
 # ----------- 路径配置 ------------
-GRAPH_JSON_DIR = cfg_get("paths", "link_json", default="/root/autodl-tmp/final_result/link/json")
-FUSE_JSON_DIR  = cfg_get("paths", "fuse_json", default="/root/autodl-tmp/final_result/fuse_json")
-LAMA_IMG_DIR   = cfg_get("paths", "src_img", default="/root/autodl-tmp/final_result/src_img")
-TYPE_REFINE_DIR = cfg_get("paths", "type_refine_json", default="/root/autodl-tmp/final_result/type_refine/json")
-PORTS_PATCH_DIR = cfg_get("paths", "ports_cls_json", default="/root/autodl-tmp/final_result/ports_cls/json")
+GRAPH_JSON_DIR = cfg_get("paths", "link_json", default=project_path("outputs", "run1", "link", "json"))
+FUSE_JSON_DIR  = cfg_get("paths", "fuse_json", default=project_path("outputs", "run1", "fuse_json"))
+LAMA_IMG_DIR   = cfg_get("paths", "src_img", default=project_path("data", "inputs"))
+TYPE_REFINE_DIR = cfg_get("paths", "type_refine_json", default=project_path("outputs", "run1", "type_refine", "json"))
+PORTS_PATCH_DIR = cfg_get("paths", "ports_cls_json", default=project_path("outputs", "run1", "ports_cls", "json"))
 
-OUT_BASE = cfg_get("paths", "final_result_root", default="/root/autodl-tmp/final_result/final_result")
+OUT_BASE = cfg_get("paths", "final_result_root", default=project_path("outputs", "run1", "final_result"))
 OUT_IMG  = os.path.join(OUT_BASE, "img")
 OUT_JSON = os.path.join(OUT_BASE, "json")
 
@@ -337,7 +337,7 @@ def visualize_full(
     # ===============================
     #  只使用本地字体（不会网络下载）
     # ===============================
-    font_dir = cfg_get("paths", "font_dir", default="/root/autodl-tmp/final_result/font")
+    font_dir = cfg_get("paths", "font_dir", default=project_path("assets", "fonts"))
     font_path = os.path.join(font_dir, "DejaVuSans.ttf")
     if not os.path.exists(font_path):
         raise FileNotFoundError(

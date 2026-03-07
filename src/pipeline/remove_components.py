@@ -4,17 +4,17 @@ import cv2
 import numpy as np
 from pathlib import Path
 
-from path_config import cfg_get
+from path_config import cfg_get, project_path
 
 # ------------------------------------------------------------------
 # 路径配置
 # ------------------------------------------------------------------
-SRC_IMG_DIR   = Path(cfg_get("paths", "src_img", default="/root/autodl-tmp/final_result/src_img"))          # 原始 png
-YOLO_TXT_DIR  = Path(cfg_get("paths", "yolo_labels", default="/root/autodl-tmp/final_result/yolo_detect/exp/labels"))  # yolo txt
-SAVE_DIR      = Path(cfg_get("paths", "dao_xian", default="/root/autodl-tmp/final_result/dao_xian"))  # 输出目录
+SRC_IMG_DIR   = Path(cfg_get("paths", "src_img", default=project_path("data", "inputs")))          # 原始 png
+YOLO_TXT_DIR  = Path(cfg_get("paths", "yolo_labels", default=project_path("outputs", "run1", "yolo_detect", "exp", "labels")))  # yolo txt
+SAVE_DIR      = Path(cfg_get("paths", "dao_xian", default=project_path("outputs", "run1", "dao_xian")))  # 输出目录
 SAVE_DIR.mkdir(parents=True, exist_ok=True)
 
-CLASSES_TXT   = Path(cfg_get("paths", "classes_txt", default="/root/autodl-fs/kicad_component_dataset/classes.txt"))  # 可选，仅用于打印
+CLASSES_TXT   = Path(cfg_get("paths", "classes_txt", default=project_path("assets", "meta", "classes.txt")))  # 可选，仅用于打印
 CLASS_NAMES   = [l.strip() for l in open(CLASSES_TXT).readlines()] if CLASSES_TXT.exists() else []
 
 # ------------------------------------------------------------------

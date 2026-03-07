@@ -43,26 +43,6 @@ fi
 CONDA_ENV_NAME="${HCD_CONDA_ENV:-hcd_pipeline_v2}"
 
 ###############################################
-# YAML 读取助手（依赖 PyYAML；在 conda env 激活后调用更稳）
-###############################################
-cfg_get() {
-  local key="$1"
-  python - "$CFG_FILE" "$key" <<'PY'
-import sys, yaml
-cfg_file, key = sys.argv[1], sys.argv[2]
-with open(cfg_file, "r", encoding="utf-8") as f:
-    data = yaml.safe_load(f)
-cur = data
-for p in key.split("."):
-    if not isinstance(cur, dict) or p not in cur:
-        print("")
-        sys.exit(0)
-    cur = cur[p]
-print(cur if cur is not None else "")
-PY
-}
-
-###############################################
 # 激活统一环境（只激活一次）
 ###############################################
 set +u
@@ -70,7 +50,37 @@ conda activate "$CONDA_ENV_NAME"
 set -u 2>/dev/null || true
 
 ###############################################
-# 从 YAML 读取路径（不再写死 AutoDL 路径）
+# 统一切到仓库根目录，避免相对路径受当前 shell 工作目录影响
+###############################################
+cd "$PROJECT_ROOT"
+
+###############################################
+# YAML 读取助手
+# - 统一复用 src/pipeline/config_utils.py
+# - 返回的都是“已解析好的绝对路径”
+###############################################
+cfg_get() {
+  local key="$1"
+  python - "$CFG_FILE" "$key" <<'PY'
+import sys
+from src.pipeline.config_utils import load_paths_config
+
+cfg_file, key = sys.argv[1], sys.argv[2]
+data = load_paths_config(cfg_file)
+
+cur = data
+for p in key.split("."):
+    if not isinstance(cur, dict) or p not in cur:
+        print("")
+        sys.exit(0)
+    cur = cur[p]
+
+print(cur if cur is not None else "")
+PY
+}
+
+###############################################
+# 从 YAML 读取路径（通过 config_utils 统一解析）
 ###############################################
 # 输入 / 权重
 SRC_IMG_DIR="$(cfg_get paths.src_img)"
@@ -78,11 +88,11 @@ YOLO_MODEL="$(cfg_get weights.yolo_best)"
 HAWP_CFG="$(cfg_get weights.hawp_cfg)"
 HAWP_CKPT="$(cfg_get weights.hawp_ckpt)"
 
-# 输出目录（从 paths 里推导）
+# 输出目录
 YOLO_EXP_DIR="$(cfg_get paths.yolo_detect_exp)"        # .../yolo_detect/exp
 SUPPRESSED_IMG_DIR="$(cfg_get paths.suppressed_img)"   # .../suppressed_img
 HAWP_JSON_DIR="$(cfg_get paths.hawp_json)"             # .../HAWPimg/json
-FONT_DIR="$(cfg_get paths.font_dir)"                   # .../font
+FONT_DIR="$(cfg_get paths.font_dir)"                   # .../assets/fonts
 SPICE_NETLIST_DIR="$(cfg_get paths.spice_netlists)"    # .../spice_netlists
 
 # 派生目录
@@ -137,7 +147,7 @@ need_file "weights.hawp_ckpt" "$HAWP_CKPT"
 mkdir -p "$RUN_DIR" "$YOLO_PROJECT_DIR" "$HAWP_OUT_DIR" "$FONT_DIR" "$SPICE_NETLIST_DIR"
 
 # 字体准备（避免 build_final_json 卡住）
-if [ ! -f "$FONT_DIR/DejaVuSans.ttf" ]; then
+if [ ! -f "$FONT_DIR/DejaVuSans.ttf" ] && [ -f /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf ]; then
   cp /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf "$FONT_DIR/" 2>/dev/null || true
 fi
 

@@ -8,14 +8,14 @@ from glob import glob
 import cv2
 import numpy as np
 
-from path_config import cfg_get
+from path_config import cfg_get, project_path
 
 # ========= 基本路径 =========
-MERGED_JSON_DIR = cfg_get("paths", "merged_points_json", default="/root/autodl-tmp/final_result/merged_points/merged_points_json")
-LAMA_IMG_DIR    = cfg_get("paths", "suppressed_img", default="/root/autodl-tmp/final_result/lama_clean")
-DAOXIAN_DIR     = cfg_get("paths", "dao_xian", default="/root/autodl-tmp/final_result/dao_xian")
+MERGED_JSON_DIR = cfg_get("paths", "merged_points_json", default=project_path("outputs", "run1", "merged_points", "merged_points_json"))
+LAMA_IMG_DIR    = cfg_get("paths", "suppressed_img", default=project_path("outputs", "run1", "suppressed_img"))
+DAOXIAN_DIR     = cfg_get("paths", "dao_xian", default=project_path("outputs", "run1", "dao_xian"))
 
-OUT_BASE   = cfg_get("paths", "link_root", default="/root/autodl-tmp/final_result/link")
+OUT_BASE   = cfg_get("paths", "link_root", default=project_path("outputs", "run1", "link"))
 OUT_IMG    = os.path.join(OUT_BASE, "img")
 OUT_JSON   = os.path.join(OUT_BASE, "json")
 

@@ -1,10 +1,10 @@
 import os
 from glob import glob
 from PIL import Image, ImageFilter, ImageOps, ImageEnhance
-from path_config import cfg_get
+from path_config import cfg_get, project_path
 
-IN_DIR  = cfg_get("paths", "src_img", default="/root/autodl-tmp/final_result/src_img")
-OUT_DIR = cfg_get("paths", "src_img_scanned", default="/root/autodl-tmp/final_result/src_img_scanned")
+IN_DIR  = cfg_get("paths", "src_img", default=project_path("data", "inputs"))
+OUT_DIR = cfg_get("paths", "src_img_scanned", default=project_path("outputs", "run1", "src_img_scanned"))
 
 os.makedirs(OUT_DIR, exist_ok=True)
 

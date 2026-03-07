@@ -15,19 +15,19 @@ import timm
 from timm.data import resolve_data_config
 from timm.data.transforms_factory import create_transform
 
-from path_config import cfg_get
+from path_config import cfg_get, project_path
 
 
 # ============ 路径配置 ============
-GRAPH_JSON_DIR = cfg_get("paths", "link_json", default="/root/autodl-tmp/final_result/link/json")
-YOLOV10_CROPS_DIR = cfg_get("paths", "yolo_crops", default="/root/autodl-tmp/final_result/yolov10_crops")
+GRAPH_JSON_DIR = cfg_get("paths", "link_json", default=project_path("outputs", "run1", "link", "json"))
+YOLOV10_CROPS_DIR = cfg_get("paths", "yolo_crops", default=project_path("outputs", "run1", "yolov10_crops"))
 
 # ---- 权重（按现有路径改）----
-BJT_CKPT   = cfg_get("weights", "bjt_ckpt", default="/root/autodl-tmp/DINOv2/out_bjt_partial_ft/best_bjt_partial_ft.pt")
-FET_CKPT   = cfg_get("weights", "fet_ckpt", default="/root/autodl-tmp/DINOv2/out_mosfet_partial_ft/best_mosfet_partial_ft.pt")
-DCSRC_CKPT = cfg_get("weights", "dcsrc_ckpt", default="/root/autodl-tmp/DINOv2/out_dcsrc_partial_ft/best_dcsrc_partial_ft.pt")   # ✅ 新增
+BJT_CKPT   = cfg_get("weights", "bjt_ckpt", default=project_path("weights", "dinov2", "best_bjt_partial_ft.pt"))
+FET_CKPT   = cfg_get("weights", "fet_ckpt", default=project_path("weights", "dinov2", "best_mosfet_partial_ft.pt"))
+DCSRC_CKPT = cfg_get("weights", "dcsrc_ckpt", default=project_path("weights", "dinov2", "best_dcsrc_partial_ft.pt"))   # ✅ 新增
 
-OUT_DIR = cfg_get("paths", "type_refine_json", default="/root/autodl-tmp/final_result/type_refine/json")
+OUT_DIR = cfg_get("paths", "type_refine_json", default=project_path("outputs", "run1", "type_refine", "json"))
 os.makedirs(OUT_DIR, exist_ok=True)
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"

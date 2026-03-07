@@ -1,24 +1,33 @@
-from pathlib import Path
-import yaml
-import os
+from __future__ import annotations
 
-def _project_root() -> Path:
-    # src/pipeline/path_config.py -> project root
-    return Path(__file__).resolve().parents[2]
+from config_utils import get_default_config_path, get_repo_root, load_paths_config, project_path
 
-def load_paths():
-    cfg_path = _project_root() / "configs" / "paths.yaml"
-    with open(cfg_path, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
+
+def _project_root() -> str:
+    return str(get_repo_root())
+
+
+def load_paths(cfg_path=None):
+    return load_paths_config(cfg_path)
+
 
 CFG = load_paths()
 
-def cfg_get(*keys, default=None):
-    cur = CFG
+
+def reload_paths(cfg_path=None):
+    global CFG
+    CFG = load_paths(cfg_path)
+    return CFG
+
+
+def cfg_get(*keys, default=None, cfg=None):
+    cur = CFG if cfg is None else cfg
     for k in keys:
         if not isinstance(cur, dict) or k not in cur:
             return default
         cur = cur[k]
     return cur
 
-PROJECT_ROOT = str(_project_root())
+
+PROJECT_ROOT = _project_root()
+DEFAULT_CFG_PATH = str(get_default_config_path())

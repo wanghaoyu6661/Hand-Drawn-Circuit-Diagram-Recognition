@@ -6,17 +6,17 @@ from glob import glob
 import numpy as np
 from sklearn.cluster import DBSCAN
 
-from path_config import cfg_get
+from path_config import cfg_get, project_path
 
 # =========================
 # 输入 / 输出目录
 # =========================
-HAWP_JSON_DIR = cfg_get("paths", "hawp_json", default="/root/autodl-tmp/final_result/HAWPimg/json")
-YOLO_LABEL_DIR = cfg_get("paths", "yolo_labels", default="/root/autodl-tmp/final_result/yolo_detect/exp/labels")
-IMG_DIR = cfg_get("paths", "suppressed_img", default="/root/autodl-tmp/final_result/lama_clean")
+HAWP_JSON_DIR = cfg_get("paths", "hawp_json", default=project_path("outputs", "run1", "HAWPimg", "json"))
+YOLO_LABEL_DIR = cfg_get("paths", "yolo_labels", default=project_path("outputs", "run1", "yolo_detect", "exp", "labels"))
+IMG_DIR = cfg_get("paths", "suppressed_img", default=project_path("outputs", "run1", "suppressed_img"))
 
-OUT_VIS = cfg_get("paths", "merged_points_vis", default="/root/autodl-tmp/final_result/merged_points/merged_points_vis")
-OUT_JSON = cfg_get("paths", "merged_points_json", default="/root/autodl-tmp/final_result/merged_points/merged_points_json")
+OUT_VIS = cfg_get("paths", "merged_points_vis", default=project_path("outputs", "run1", "merged_points", "merged_points_vis"))
+OUT_JSON = cfg_get("paths", "merged_points_json", default=project_path("outputs", "run1", "merged_points", "merged_points_json"))
 
 os.makedirs(OUT_VIS, exist_ok=True)
 os.makedirs(OUT_JSON, exist_ok=True)

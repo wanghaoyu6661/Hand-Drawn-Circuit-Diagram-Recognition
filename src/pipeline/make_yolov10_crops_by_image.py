@@ -7,17 +7,17 @@ from typing import List, Tuple, Optional
 from PIL import Image, ImageDraw
 import math
 import re
-from path_config import cfg_get
+from path_config import cfg_get, project_path
 
 # ====== 路径配置 ======
-SRC_IMG_DIR = cfg_get("paths", "src_img_scanned", default="/root/autodl-tmp/final_result/src_img_scanned")  # 你要用扫描风格的话，改成 src_img_scanned
-YOLO_LABEL_DIR = cfg_get("paths", "yolo_labels", default="/root/autodl-tmp/final_result/yolo_detect/exp/labels")
+SRC_IMG_DIR = cfg_get("paths", "src_img_scanned", default=project_path("outputs", "run1", "src_img_scanned"))  # 你要用扫描风格的话，改成 src_img_scanned
+YOLO_LABEL_DIR = cfg_get("paths", "yolo_labels", default=project_path("outputs", "run1", "yolo_detect", "exp", "labels"))
 CLASSES_TXT = (
-    cfg_get("paths", "classes_txt", default=None)
-    or cfg_get("weights", "classes_txt", default=None)
-    or "/root/autodl-fs/yolo_component_dataset/classes.txt"
+    cfg_get("paths", "classes_txt", default=project_path("assets", "meta", "classes.txt"))
+    or cfg_get("weights", "classes_txt", default=project_path("assets", "meta", "classes.txt"))
+    or project_path("assets", "meta", "classes.txt")
 )
-OUT_DIR = cfg_get("paths", "yolo_crops", default="/root/autodl-tmp/final_result/yolov10_crops")
+OUT_DIR = cfg_get("paths", "yolo_crops", default=project_path("outputs", "run1", "yolov10_crops"))
 
 # ====== 输出与绘制参数 ======
 GREEN_BOX_COLOR = (51, 255, 50)  # HCD 绿色框

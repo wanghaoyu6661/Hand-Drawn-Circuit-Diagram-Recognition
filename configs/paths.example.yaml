@@ -1,92 +1,74 @@
-# Public template for path configuration.
+# Portable template for local path overrides.
 #
-# Usage:
-# 1) Copy this file to configs/paths.local.yaml (recommended), or configs/paths.yaml
-# 2) Replace all occurrences of __PROJECT_ROOT__ with your actual project absolute path,
-#    e.g. /home/yourname/Hand-Drawn-Circuit-Diagram-Recognition
+# Recommended usage:
+# 1) Keep configs/paths.yaml as the default portable config committed to the repo.
+# 2) Copy this file to configs/paths.local.yaml only if you need local overrides.
+# 3) Paths are interpreted relative to the repository root and will be resolved
+#    to absolute paths by src/pipeline/config_utils.py.
 #
-# NOTE:
-# - Keep the key names unchanged (scripts/run_all.sh depends on them).
+# Notes:
+# - Keep the key names unchanged (scripts/run_all.sh and Python scripts depend on them).
+# - Do not replace values with absolute paths unless you intentionally want a machine-specific override.
 # - This template assumes third-party repos and weights are placed under the project tree.
 
-project_root: __PROJECT_ROOT__
+project_root: null
 
-# 外部依赖仓库（建议迁入项目内 third_party）
 legacy:
-  work_root: __PROJECT_ROOT__/outputs/run1
-  runs_root: __PROJECT_ROOT__/outputs/run1/yolo_detect
-  parseq_repo: __PROJECT_ROOT__/third_party/parseq-main
-  # 如果 third_party/parseq-main 带 hubconf.py，可与 parseq_repo 相同
-  parseq_torchhub_repo: __PROJECT_ROOT__/third_party/parseq-main
-  hawp_repo: __PROJECT_ROOT__/third_party/HAWP
-  mmpose_repo: __PROJECT_ROOT__/third_party/mmpose
+  work_root: outputs/run1
+  runs_root: outputs/run1/yolo_detect
+  parseq_repo: third_party/parseq-main
+  parseq_torchhub_repo: third_party/parseq-main
+  hawp_repo: third_party/HAWP
+  mmpose_repo: third_party/mmpose
 
 paths:
-  # ===== 输入（迁入项目内）=====
-  src_img: __PROJECT_ROOT__/data/inputs
-  classes_txt: __PROJECT_ROOT__/assets/meta/classes.txt
-  yolo_data_yaml: __PROJECT_ROOT__/configs/yolo_data.yaml
+  # Inputs / metadata
+  src_img: data/inputs
+  classes_txt: assets/meta/classes.txt
+  yolo_data_yaml: configs/yolo_data.yaml
 
-  # ===== 项目内输出（run1）=====
-  src_img_scanned: __PROJECT_ROOT__/outputs/run1/src_img_scanned
+  # Intermediate outputs
+  src_img_scanned: outputs/run1/src_img_scanned
+  yolo_detect_exp: outputs/run1/yolo_detect/exp
+  yolo_labels: outputs/run1/yolo_detect/exp/labels
+  yolo_crops: outputs/run1/yolov10_crops
+  fuse_json: outputs/run1/fuse_json
+  suppressed_img: outputs/run1/suppressed_img
+  hawp_json: outputs/run1/HAWPimg/json
+  merged_points_vis: outputs/run1/merged_points/merged_points_vis
+  merged_points_json: outputs/run1/merged_points/merged_points_json
+  dao_xian: outputs/run1/dao_xian
+  link_root: outputs/run1/link
+  link_json: outputs/run1/link/json
+  type_refine_json: outputs/run1/type_refine/json
+  ports_cls_json: outputs/run1/ports_cls/json
 
-  # YOLO 检测输出
-  yolo_detect_exp: __PROJECT_ROOT__/outputs/run1/yolo_detect/exp
-  yolo_labels: __PROJECT_ROOT__/outputs/run1/yolo_detect/exp/labels
-  yolo_crops: __PROJECT_ROOT__/outputs/run1/yolov10_crops
+  # Final outputs
+  final_result_root: outputs/run1/final_result
+  spice_netlists: outputs/run1/spice_netlists
 
-  # OCR 融合输出
-  fuse_json: __PROJECT_ROOT__/outputs/run1/fuse_json
-
-  # 元件区域抑制输出（原 lama_clean）
-  suppressed_img: __PROJECT_ROOT__/outputs/run1/suppressed_img
-
-  # HAWP 输出（脚本里读取 json 子目录；run_all 里 HAWP 输出根目录应为 HAWPimg）
-  hawp_json: __PROJECT_ROOT__/outputs/run1/HAWPimg/json
-
-  # 合并点输出
-  merged_points_vis: __PROJECT_ROOT__/outputs/run1/merged_points/merged_points_vis
-  merged_points_json: __PROJECT_ROOT__/outputs/run1/merged_points/merged_points_json
-
-  # 去组件 / 导线增强输出
-  dao_xian: __PROJECT_ROOT__/outputs/run1/dao_xian
-
-  # 连接推理输出
-  link_root: __PROJECT_ROOT__/outputs/run1/link
-  link_json: __PROJECT_ROOT__/outputs/run1/link/json
-
-  # 类型细化 / 端点语义输出
-  type_refine_json: __PROJECT_ROOT__/outputs/run1/type_refine/json
-  ports_cls_json: __PROJECT_ROOT__/outputs/run1/ports_cls/json
-
-  # 最终结果输出
-  final_result_root: __PROJECT_ROOT__/outputs/run1/final_result
-
-  # 新增：由 build_spice_netlists.py 自动创建并写入 .spice 网表
-  spice_netlists: __PROJECT_ROOT__/outputs/run1/spice_netlists
-
-  # 共享静态资源（建议固定在 assets，而不是每个 run 都复制）
-  font_dir: __PROJECT_ROOT__/assets/fonts
+  # Shared static assets
+  font_dir: assets/fonts
 
 weights:
   # YOLO
-  yolo_best: __PROJECT_ROOT__/weights/yolo/best.pt
+  yolo_best: weights/yolo/best.pt
 
   # PARSeq
-  parseq_ckpt: __PROJECT_ROOT__/weights/parseq/best_parseq.pt
-  parseq_charset: __PROJECT_ROOT__/assets/meta/parseq_charset.txt
+  parseq_ckpt: weights/parseq/best_parseq.pt
+  parseq_charset: assets/meta/parseq_charset.txt
 
-  # HAWP（cfg + ckpt）
-  hawp_cfg: __PROJECT_ROOT__/weights/hawp/config.yaml
-  hawp_ckpt: __PROJECT_ROOT__/weights/hawp/last_epoch_035.pth
+  # HAWP
+  hawp_cfg: weights/hawp/config.yaml
+  hawp_ckpt: weights/hawp/last_epoch_035.pth
 
-  # DINOv2 子类型分类权重
-  bjt_ckpt: __PROJECT_ROOT__/weights/dinov2/best_bjt_partial_ft.pt
-  fet_ckpt: __PROJECT_ROOT__/weights/dinov2/best_mosfet_partial_ft.pt
-  dcsrc_ckpt: __PROJECT_ROOT__/weights/dinov2/best_dcsrc_partial_ft.pt
+  # DINOv2 subtype classifiers
+  bjt_ckpt: weights/dinov2/best_bjt_partial_ft.pt
+  fet_ckpt: weights/dinov2/best_mosfet_partial_ft.pt
+  dcsrc_ckpt: weights/dinov2/best_dcsrc_partial_ft.pt
 
-  # ViTPose（自定义 cfg 建议放在主仓库 configs/mmpose_ports，避免 third_party/mmpose 子模块遗漏）
-  pose3k_cfg: __PROJECT_ROOT__/configs/mmpose_ports/vitpose_l_ports_3k_256x192_fix.py
-  pose3k_wts: __PROJECT_ROOT__/weights/vitpose/best_coco_AP_epoch_29.pth
-  pose2k_cfg: __PROJECT_ROOT__/configs/mmpose_ports/vitpose_l_ports_2k_256x192_fix.py
-  pose2k_wts: __PROJECT_ROOT__/weights/vitpose/best_coco_AP_epoch_30.pth
+  # ViTPose
+  pose3k_cfg: configs/mmpose_ports/vitpose_l_ports_3k_256x192_fix.py
+  pose3k_wts: weights/vitpose/best_coco_AP_epoch_29.pth
+  pose2k_cfg: configs/mmpose_ports/vitpose_l_ports_2k_256x192_fix.py
+  pose2k_wts: weights/vitpose/best_coco_AP_epoch_30.pth

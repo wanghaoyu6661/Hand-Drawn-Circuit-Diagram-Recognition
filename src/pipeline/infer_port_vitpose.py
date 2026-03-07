@@ -13,21 +13,21 @@ from PIL import Image
 # ============ OFFICIAL MMPose Topdown APIs ============
 from mmpose.apis import init_model, inference_topdown
 
-from path_config import cfg_get
+from path_config import cfg_get, project_path
 
 # ============ 路径 ============
-GRAPH_JSON_DIR = cfg_get("paths", "link_json", default="/root/autodl-tmp/final_result/link/json")
-TYPE_REFINE_DIR = cfg_get("paths", "type_refine_json", default="/root/autodl-tmp/final_result/type_refine/json")
-YOLOV10_CROPS_DIR = cfg_get("paths", "yolo_crops", default="/root/autodl-tmp/final_result/yolov10_crops")
+GRAPH_JSON_DIR = cfg_get("paths", "link_json", default=project_path("outputs", "run1", "link", "json"))
+TYPE_REFINE_DIR = cfg_get("paths", "type_refine_json", default=project_path("outputs", "run1", "type_refine", "json"))
+YOLOV10_CROPS_DIR = cfg_get("paths", "yolo_crops", default=project_path("outputs", "run1", "yolov10_crops"))
 
 # 你的 ViTPose configs + weights
-POSE3K_CFG = cfg_get("weights", "pose3k_cfg", default="/root/autodl-tmp/mmpose/configs/ports/vitpose_l_ports_3k_256x192_fix.py")
-POSE3K_WTS = cfg_get("weights", "pose3k_wts", default="/root/autodl-tmp/work_dirs/vitpose_ports_3k_l_256x192/best_coco_AP_epoch_29.pth")
+POSE3K_CFG = cfg_get("weights", "pose3k_cfg", default=project_path("configs", "mmpose_ports", "vitpose_l_ports_3k_256x192_fix.py"))
+POSE3K_WTS = cfg_get("weights", "pose3k_wts", default=project_path("weights", "vitpose", "best_coco_AP_epoch_29.pth"))
 
-POSE2K_CFG = cfg_get("weights", "pose2k_cfg", default="/root/autodl-tmp/mmpose/configs/ports/vitpose_l_ports_2k_256x192_fix.py")
-POSE2K_WTS = cfg_get("weights", "pose2k_wts", default="/root/autodl-tmp/work_dirs/vitpose_ports_2k_l_256x192/best_coco_AP_epoch_30.pth")
+POSE2K_CFG = cfg_get("weights", "pose2k_cfg", default=project_path("configs", "mmpose_ports", "vitpose_l_ports_2k_256x192_fix.py"))
+POSE2K_WTS = cfg_get("weights", "pose2k_wts", default=project_path("weights", "vitpose", "best_coco_AP_epoch_30.pth"))
 
-OUT_DIR = cfg_get("paths", "ports_cls_json", default="/root/autodl-tmp/final_result/ports_cls/json")
+OUT_DIR = cfg_get("paths", "ports_cls_json", default=project_path("outputs", "run1", "ports_cls", "json"))
 os.makedirs(OUT_DIR, exist_ok=True)
 
 DEVICE = "cuda"  # "cpu" 也行
@@ -92,7 +92,7 @@ KP_NAMES_2K = {
 def natural_key(s: str):
     return [int(t) if t.isdigit() else t.lower() for t in re.split(r"(\d+)", s)]
 
-SRC_IMG_DIR = cfg_get("paths", "src_img", default="/root/autodl-tmp/final_result/src_img")
+SRC_IMG_DIR = cfg_get("paths", "src_img", default=project_path("data", "inputs"))
 
 def get_image_wh(base, image_name):
     """

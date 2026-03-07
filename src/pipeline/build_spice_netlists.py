@@ -14,34 +14,12 @@ from dataclasses import dataclass
 from glob import glob
 from typing import Dict, List, Optional, Sequence, Tuple
 
-try:
-    import yaml  # type: ignore
-except Exception as exc:  # pragma: no cover
-    raise RuntimeError("PyYAML is required to run build_spice_netlists.py") from exc
+from config_utils import get_default_config_path, get_repo_root, load_paths_config
 
 
 # -----------------------------------------------------------------------------
 # Configuration helpers
 # -----------------------------------------------------------------------------
-
-def _project_root_from_here() -> str:
-    return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-
-
-def _default_cfg_file(project_root: str) -> str:
-    local_path = os.path.join(project_root, "configs", "paths.local.yaml")
-    if os.path.isfile(local_path):
-        return local_path
-    return os.path.join(project_root, "configs", "paths.yaml")
-
-
-def load_yaml(path: str) -> dict:
-    with open(path, "r", encoding="utf-8") as f:
-        data = yaml.safe_load(f) or {}
-    if not isinstance(data, dict):
-        raise ValueError(f"YAML root must be a mapping: {path}")
-    return data
-
 
 def cfg_get(cfg: dict, dotted_key: str, default=None):
     cur = cfg
@@ -905,8 +883,7 @@ def export_one(final_json_path: str, output_dir: str) -> str:
 # -----------------------------------------------------------------------------
 
 def parse_args() -> argparse.Namespace:
-    project_root = _project_root_from_here()
-    cfg_path = _default_cfg_file(project_root)
+    cfg_path = str(get_default_config_path(get_repo_root()))
     parser = argparse.ArgumentParser(description="Generate SPICE netlists from final JSON files.")
     parser.add_argument("--cfg", default=cfg_path, help="Path to paths.yaml / paths.local.yaml")
     parser.add_argument("--input-dir", default=None, help="Directory containing *.final.json")
@@ -918,7 +895,7 @@ def main() -> int:
     args = parse_args()
     cfg = {}
     if args.cfg and os.path.isfile(args.cfg):
-        cfg = load_yaml(args.cfg)
+        cfg = load_paths_config(args.cfg)
     elif not (args.input_dir and args.output_dir):
         raise FileNotFoundError(f"Config file not found: {args.cfg}")
 

@@ -9,15 +9,15 @@ from tqdm import tqdm
 from PIL import Image
 from torchvision import transforms
 import sys
-from path_config import cfg_get
-sys.path.append(cfg_get("legacy", "parseq_repo", default="/root/autodl-tmp/parseq-main"))
+from path_config import cfg_get, project_path
+sys.path.append(cfg_get("legacy", "parseq_repo", default=project_path("third_party", "parseq-main")))
 
 
 def load_parseq_model(ckpt_path, charset_path, device):
     print(f"🔹 Loading PARSeq from {ckpt_path}")
 
     model = torch.hub.load(
-        cfg_get("legacy", "parseq_torchhub_repo", default="/root/.cache/torch/hub/baudm_parseq_main"),
+        cfg_get("legacy", "parseq_torchhub_repo", default=project_path("third_party", "parseq-main")),
         'parseq',
         source='local',
         pretrained=False
@@ -158,14 +158,14 @@ def fuse_per_image(image_name, image_path, label_path, model, device, output_dir
 
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    yolo_label_dir = cfg_get("paths", "yolo_labels", default="/root/autodl-tmp/final_result/yolo_detect/exp/labels")
-    src_img_dir = cfg_get("paths", "src_img", default="/root/autodl-tmp/final_result/src_img")
-    output_dir = cfg_get("paths", "fuse_json", default="/root/autodl-tmp/final_result/fuse_json")
-    ckpt = cfg_get("weights", "parseq_ckpt", default="/root/autodl-tmp/handocr_project/output_parseq/best_parseq.pt")
-    charset_path = cfg_get("weights", "parseq_charset", default="/root/autodl-tmp/handwritten_ocr/scripts/my_dict.txt")
+    yolo_label_dir = cfg_get("paths", "yolo_labels", default=project_path("outputs", "run1", "yolo_detect", "exp", "labels"))
+    src_img_dir = cfg_get("paths", "src_img", default=project_path("data", "inputs"))
+    output_dir = cfg_get("paths", "fuse_json", default=project_path("outputs", "run1", "fuse_json"))
+    ckpt = cfg_get("weights", "parseq_ckpt", default=project_path("weights", "parseq", "best_parseq.pt"))
+    charset_path = cfg_get("weights", "parseq_charset", default=project_path("assets", "meta", "parseq_charset.txt"))
     data_yaml = (
-        cfg_get("weights", "yolo_data_yaml", default=None)
-        or cfg_get("paths", "yolo_data_yaml", default=None)
+        cfg_get("weights", "yolo_data_yaml", default=project_path("configs", "yolo_data.yaml"))
+        or cfg_get("paths", "yolo_data_yaml", default=project_path("configs", "yolo_data.yaml"))
         or "/root/yolov9-main/data/data.yaml"
     )
 
