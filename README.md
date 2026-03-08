@@ -129,6 +129,18 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate hcd_pipeline_v2
 ```
 
+### Important compatibility note
+
+Fresh-machine validation showed that `chumpy==0.70` is not import-safe with NumPy >= 1.24.
+For that reason, both provided environments pin:
+
+- `numpy==1.23.5`
+- `pip==24.3.1`
+- `setuptools==60.2.0`
+- `wheel==0.45.1`
+
+The `pip:` section also installs `chumpy` with `--no-build-isolation`, which avoids the build failure observed on new machines.
+
 ### Post-create OpenMMLab step
 
 After the environment is created, install the OpenMMLab wheel stack:
@@ -140,6 +152,17 @@ pip install "mmengine==0.10.7" "mmdet==3.3.0" "mmpose==1.3.2" "mmpretrain==1.2.0
 ```
 
 These commands are intentionally kept as a post-create step because this has proven more stable on fresh-machine reproduction than forcing the entire OpenMMLab stack through a single Conda environment solve.
+
+### Optional persistent editable install for local third-party packages
+
+If you prefer to make the local third-party repositories importable for the whole shell session, you can also run:
+
+```bash
+pip install -e third_party/HAWP
+pip install -e third_party/parseq-main
+```
+
+This is optional when using `scripts/run_all.sh`, because the script now injects the repository-local `third_party/HAWP` and `third_party/parseq-main` paths into `PYTHONPATH` automatically.
 
 ---
 
@@ -315,14 +338,22 @@ The shell entry script automatically:
 - prefers `configs/paths.local.yaml` when present
 - otherwise falls back to `configs/paths.yaml`
 - resolves configuration paths through the shared portable config loader
+- injects `third_party/HAWP` and `third_party/parseq-main` into `PYTHONPATH`
+- performs a small preflight import check for `hawp` and `strhub` before the main stages start
 
-If you are running from a shell session where local third-party packages are not already discoverable, set:
+So for the default repository layout, the following is sufficient:
+
+```bash
+bash scripts/run_all.sh
+```
+
+If you want to run individual Python modules manually outside `run_all.sh`, you can still export:
 
 ```bash
 export PYTHONPATH="$PWD/third_party/HAWP:$PWD/third_party/parseq-main:$PYTHONPATH"
 ```
 
-before launching `run_all.sh`.
+or use the editable-install option described above.
 
 ---
 

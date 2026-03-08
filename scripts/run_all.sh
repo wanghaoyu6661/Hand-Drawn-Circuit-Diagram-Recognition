@@ -56,6 +56,20 @@ set -u 2>/dev/null || true
 cd "$PROJECT_ROOT"
 
 ###############################################
+# 第三方本地包（HAWP / PARSeq）
+# 说明：fresh-machine 复现中，直接执行 python -m hawp...
+# 如果没有把 third_party 目录加入 PYTHONPATH，会出现
+# ModuleNotFoundError: No module named 'hawp'.
+# 这里自动注入仓库内第三方路径，避免用户手动 export。
+###############################################
+if [ -d "$PROJECT_ROOT/third_party/HAWP" ]; then
+  export PYTHONPATH="$PROJECT_ROOT/third_party/HAWP:${PYTHONPATH:-}"
+fi
+if [ -d "$PROJECT_ROOT/third_party/parseq-main" ]; then
+  export PYTHONPATH="$PROJECT_ROOT/third_party/parseq-main:${PYTHONPATH:-}"
+fi
+
+###############################################
 # YAML 读取助手
 # - 统一复用 src/pipeline/config_utils.py
 # - 返回的都是“已解析好的绝对路径”
@@ -160,11 +174,30 @@ echo "🐍 CONDA_ENV      = $CONDA_ENV_NAME"
 echo "🧩 HAWP_CFG       = $HAWP_CFG"
 echo "📁 RUN_DIR        = $RUN_DIR"
 echo "📁 SPICE_OUT_DIR  = $SPICE_NETLIST_DIR"
+echo "🧭 PYTHONPATH     = $PYTHONPATH"
 echo "======================================="
 
 if [ "$HAWP_CFG" = "$DEFAULT_HAWP_CFG" ]; then
   echo "ℹ️ HAWP 配置默认来自: $DEFAULT_HAWP_CFG"
 fi
+
+python - <<'PY'
+import sys
+failed = []
+for name in ["hawp", "strhub"]:
+    try:
+        __import__(name)
+    except Exception as e:
+        failed.append((name, repr(e)))
+if failed:
+    print("❌ 第三方本地包导入失败。请确认 third_party 目录完整，或手动执行:")
+    print("   pip install -e third_party/HAWP")
+    print("   pip install -e third_party/parseq-main")
+    for name, err in failed:
+        print(f"   - {name}: {err}")
+    sys.exit(1)
+print("✔ 第三方本地包导入检查通过（hawp / strhub）")
+PY
 
 ############################################
 # 1. YOLOv10 检测
